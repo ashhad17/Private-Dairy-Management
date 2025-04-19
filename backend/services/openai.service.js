@@ -1,10 +1,9 @@
 const { GoogleGenAI } = require('@google/genai');
+require('dotenv').config();
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
-
-const model = ai.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
 exports.suggestTitleAndMood = async (content) => {
   const prompt = `
@@ -22,16 +21,20 @@ Return the result as JSON like:
 `;
 
   try {
-    const result = await model.generateContent({
-      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: prompt,
     });
 
-    const response = await result.response;
-    const text = await response.text();
+    let text = response.text;
 
-    return JSON.parse(text);
+// Remove Markdown formatting if present
+text = text.replace(/```(?:json)?/g, '').trim();
+
+return JSON.parse(text);
+
   } catch (err) {
-    console.error('Error parsing Gemini response:', err);
+    console.error("Error parsing Gemini response:", err);
     return { title: '', mood: 'neutral' };
   }
 };

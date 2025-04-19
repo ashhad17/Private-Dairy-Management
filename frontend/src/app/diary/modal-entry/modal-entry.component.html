@@ -1,0 +1,69 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50" *ngIf="isModalOpen">
+    <div class="bg-white p-6 rounded-lg w-96">
+      <h2 class="text-2xl font-semibold text-gray-800">{{ isEdit ? 'Edit Entry' : 'Create New Entry' }}</h2>
+      
+      <form (ngSubmit)="onSubmit()">
+        <div class="mb-4">
+          <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+          <input
+            id="title"
+            type="text"
+            [(ngModel)]="entry.title"
+            name="title"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg mt-2 focus:ring-2 focus:ring-indigo-500"
+            required />
+        </div>
+  
+        <div class="mb-4">
+          <label for="content" class="block text-sm font-medium text-gray-700">Content</label>
+          <textarea
+            id="content"
+            [(ngModel)]="entry.content"
+            name="content"
+            rows="4"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg mt-2 focus:ring-2 focus:ring-indigo-500"
+            required></textarea>
+        </div>
+  
+        <div class="mb-4">
+          <label for="tags" class="block text-sm font-medium text-gray-700">Tags</label>
+          <input
+            id="tags"
+            type="text"
+            [(ngModel)]="entry.tags"
+            name="tags"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg mt-2 focus:ring-2 focus:ring-indigo-500"
+            placeholder="Comma separated tags (e.g., travel, work, personal)" />
+        </div>
+  
+        <div class="mb-4">
+          <label for="mood" class="block text-sm font-medium text-gray-700">Mood</label>
+          <select
+            id="mood"
+            [(ngModel)]="entry.mood"
+            name="mood"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg mt-2 focus:ring-2 focus:ring-indigo-500">
+            <option value="happy">😊 Happy</option>
+            <option value="sad">😔 Sad</option>
+            <option value="angry">😡 Angry</option>
+            <option value="excited">😃 Excited</option>
+          </select>
+        </div>
+  
+        <div class="flex justify-between items-center mt-6">
+          <button
+            type="button"
+            (click)="closeModal()"
+            class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition">
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+            {{ isEdit ? 'Save Changes' : 'Create Entry' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  

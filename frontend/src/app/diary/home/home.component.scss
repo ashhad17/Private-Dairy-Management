@@ -1,0 +1,13 @@
+/* Customize your theme or add global styles here */
+
+/* Example: Add some margin and padding for better spacing */
+.container {
+    max-width: 1280px;
+  }
+  
+  /* Card Hover Effect */
+  .bg-white:hover {
+    transform: translateY(-4px);
+    transition: transform 0.2s ease-in-out;
+  }
+  

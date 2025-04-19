@@ -1,0 +1,40 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DiaryService {
+  private apiUrl = 'http://localhost:5000/api/diary'; // Adjust backend URL if needed
+
+  constructor(private http: HttpClient) {}
+
+  // Fetch all diary entries
+  getEntries(): Observable<any> {
+    return this.http.get(`${this.apiUrl}`);
+  }
+
+  // Fetch filtered diary entries
+  getFilteredEntries(tags: string): Observable<any> {
+    return this.http.get(`http://localhost:5000/api/diary/filter?tags=${encodeURIComponent(tags)}`);
+  }
+
+  // Create a new diary entry
+  createEntry(entry: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}`, entry);
+  }
+  analyzeEntryContent(content: string) {
+    return this.http.post<any>('http://localhost:5000/api/diary-ai/analyze', { content });
+  }
+  
+  // Update an existing diary entry
+  updateEntry(id: string, entry: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, entry);
+  }
+
+  // Delete a diary entry
+  deleteEntry(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+}

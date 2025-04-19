@@ -1,0 +1,22 @@
+<div class="container mx-auto px-4 py-10" *ngIf="entry">
+    <h1 class="text-3xl font-semibold text-indigo-700">{{ entry.title }}</h1>
+    <p class="mt-4 text-gray-700 whitespace-pre-wrap">{{ entry.content }}</p>
+  
+    <div class="mt-6">
+      <span *ngFor="let tag of entry.tags?.split(',')" class="bg-indigo-100 text-indigo-700 text-sm px-2 py-1 rounded-full mr-2">
+        {{ tag }}
+      </span>
+    </div>
+  
+    <div class="mt-4 text-2xl">
+      <span *ngIf="entry.mood === 'happy'">😊</span>
+      <span *ngIf="entry.mood === 'sad'">😔</span>
+      <span *ngIf="entry.mood === 'angry'">😡</span>
+      <span *ngIf="entry.mood === 'excited'">😃</span>
+    </div>
+  
+    <div class="mt-8">
+      <a routerLink="/" class="text-indigo-600 hover:underline">← Back to Home</a>
+    </div>
+  </div>
+  

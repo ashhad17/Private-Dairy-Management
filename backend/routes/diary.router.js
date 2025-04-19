@@ -14,7 +14,7 @@ router.get('/filter', diary.getFilteredEntries);
 
 router.post('/toggle-reminder', auth, async (req, res) => {
     const { emailReminders } = req.body;
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user.id);
     user.emailReminders = emailReminders;
     await user.save();
     res.json({ message: 'Reminder preference updated.' });
