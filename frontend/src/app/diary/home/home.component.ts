@@ -132,6 +132,7 @@ export class HomeComponent implements OnInit {
     console.log(this.diaryService.analyzeEntryContent(this.newEntry.content));
     this.diaryService.analyzeEntryContent(this.newEntry.content).subscribe({
       next: (result) => {
+        console.log('Analyzed result:', result);
         this.newEntry.title = result.title || '';
         this.newEntry.mood = result.mood || 'neutral';
         this.isLoading = false;

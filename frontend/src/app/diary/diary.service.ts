@@ -17,9 +17,9 @@ export class DiaryService {
 
   // Fetch filtered diary entries
   getFilteredEntries(tags: string): Observable<any> {
-    return this.http.get(`http://localhost:5000/api/diary/filter?tags=${encodeURIComponent(tags)}`);
+    return this.http.get(`http://localhost:5000/api/diary/filter?mood=${encodeURIComponent(tags)}`);
   }
-
+  // http://localhost:5000/api/diary/filter?mood=sad
   // Create a new diary entry
   createEntry(entry: any): Observable<any> {
     return this.http.post(`${this.apiUrl}`, entry);
