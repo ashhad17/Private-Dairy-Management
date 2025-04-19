@@ -73,12 +73,13 @@ exports.moodSummary = async (req, res) => {
 
   res.json(summary); // e.g. [{ _id: 'happy', count: 10 }]
 };
-
-// Get entries grouped by date
 exports.getCalendarView = async (req, res) => {
   try {
+    const userId = new mongoose.Types.ObjectId(req.user.id);  // 👈 convert string to ObjectId
+    console.log('Fetching entries for user ID:', userId);
+
     const entries = await DiaryEntry.aggregate([
-      { $match: { user: req.user._id } },
+      { $match: { user: userId } },
       {
         $group: {
           _id: {
@@ -91,8 +92,10 @@ exports.getCalendarView = async (req, res) => {
       { $sort: { "_id": -1 } }
     ]);
 
+    console.log('Entries grouped by date:', entries);
     res.json(entries);
   } catch (err) {
+    console.error('Error fetching calendar view:', err);
     res.status(500).json({ message: 'Calendar view failed', error: err.message });
   }
 };
@@ -120,8 +123,12 @@ exports.exportPDF = async (req, res) => {
 
 // Get entries filtered by tags (optional)
 exports.getFilteredEntries = async (req, res) => {
-  const { tags, from, to } = req.query;
+  const { tags, from, to, mood } = req.query; // ← Add mood here
   const query = { user: req.user.id };
+
+  if (mood) {
+    query.mood = mood;
+  }
 
   if (tags) {
     const tagArray = tags.split(',').map(tag => tag.trim().toLowerCase());
@@ -134,7 +141,7 @@ exports.getFilteredEntries = async (req, res) => {
     if (to) query.createdAt.$lte = new Date(to);
   }
 
-  console.log("Querying with:", query); // 🐞 DEBUG LOG
+  console.log("Querying with:", query); // 🐞 Debug
 
   try {
     const entries = await DiaryEntry.find(query).sort({ createdAt: -1 });
