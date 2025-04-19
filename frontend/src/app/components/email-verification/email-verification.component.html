@@ -1,0 +1,27 @@
+
+   <div class="max-w-sm mx-auto mt-20 p-6 bg-white shadow-lg rounded-xl">
+    <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Email Verification</h2>
+    
+    <form (ngSubmit)="verifyEmail()">
+      <input 
+        type="text" 
+        [value]="token" 
+        placeholder="Verification Token" 
+        readonly 
+        hidden
+        class="w-full p-3 border border-gray-300 rounded-md text-gray-600 bg-gray-100 mb-4" 
+      />
+    
+      <div *ngIf="message" class="text-green-600 mt-4 text-center font-medium">
+        {{ message }}
+      </div>
+    
+      <button 
+        type="submit" 
+        [disabled]="!token"
+        class="w-full mt-4 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed">
+        Verify Email
+      </button>
+    </form>
+  </div>
+  

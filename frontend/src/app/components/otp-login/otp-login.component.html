@@ -1,0 +1,54 @@
+
+   <div class="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
+    <div class="w-full max-w-md space-y-8">
+      <div>
+        <!-- <img class="mx-auto h-12 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" /> -->
+        <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+          OTP Login
+        </h2>
+      </div>
+  
+      <form class="mt-8 space-y-6">
+        <div class="rounded-md shadow-sm space-y-4">
+          <!-- Email Input -->
+          <div *ngIf="step === 1">
+            <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
+            <input type="email" id="email" [(ngModel)]="email" name="email" required autocomplete="email"
+              class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" />
+          </div>
+  
+          <!-- OTP Input -->
+          <div *ngIf="step === 2">
+            <label for="otp" class="block text-sm font-medium text-gray-700">Enter OTP</label>
+            <input type="text" id="otp" [(ngModel)]="otp" name="otp" required
+              class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm" />
+          </div>
+        </div>
+  
+        <div>
+          <!-- Step 1 Button -->
+          <button *ngIf="step === 1" type="button" (click)="sendOtp()" [disabled]="loading"
+            class="group relative flex w-full justify-center rounded-md bg-indigo-600 py-2 px-4 text-sm font-semibold text-white hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            {{ loading ? 'Sending...' : 'Send OTP' }}
+          </button>
+  
+          <!-- Step 2 Button -->
+          <button *ngIf="step === 2" type="button" (click)="verifyOtp()" [disabled]="loading"
+            class="group relative flex w-full justify-center rounded-md bg-green-600 py-2 px-4 text-sm font-semibold text-white hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+            {{ loading ? 'Verifying...' : 'Verify OTP' }}
+          </button>
+        </div>
+  
+        <!-- Feedback Messages -->
+        <div *ngIf="error" class="text-sm text-red-500 text-center">
+          {{ error }}
+        </div>
+      </form>
+  
+      <p class="mt-6 text-center text-sm text-gray-600">
+        Want to sign in normally?
+        <a routerLink="/login" class="font-medium text-indigo-600 hover:text-indigo-500">Back to login</a>
+      </p>
+    </div>
+  </div>
+  

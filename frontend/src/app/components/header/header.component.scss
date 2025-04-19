@@ -1,0 +1,15 @@
+nav {
+    display: flex;
+    justify-content: space-between;
+    background: #333;
+    color: white;
+    padding: 1rem;
+    button {
+      background: crimson;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+    }
+  }
+  
