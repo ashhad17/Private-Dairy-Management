@@ -1,33 +1,33 @@
-<!-- <app-header></app-header>
-
-<h2>Dashboard</h2>
-<p>{{ message }}</p>
-<div *ngIf="user">
-  <p><strong>Email:</strong> {{ user.email }}</p>
-  <p><strong>User ID:</strong> {{ user.id }}</p>
-</div> -->
-<div class="min-h-screen bg-gray-50">
+<div class="min-h-screen bg-[url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center flex flex-col">
+  
+  <!-- Header -->
   <app-header></app-header>
+
   <!-- Main Dashboard Card -->
-  <main class="max-w-2xl mx-auto mt-10 px-6">
-    <div class="bg-white shadow-lg rounded-xl p-6 transition hover:shadow-xl">
-      <h2 class="text-3xl font-bold text-gray-800 mb-4">Dashboard</h2>
+  <main class="flex-grow flex items-center justify-center px-4 py-10">
+    <div class="backdrop-blur-md bg-white/20 border border-white/30 shadow-2xl rounded-2xl p-8 w-full max-w-2xl transition-all hover:shadow-indigo-500/30">
+
+      <!-- Title -->
+      <h2 class="text-4xl font-bold text-white text-center mb-6">
+        📓 Welcome to Your Diary Dashboard
+      </h2>
 
       <!-- Loading Spinner -->
-      <div *ngIf="loading" class="flex justify-center items-center py-8">
-        <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      <div *ngIf="loading" class="flex justify-center items-center py-6">
+        <div class="w-10 h-10 border-4 border-indigo-400 border-t-transparent rounded-full animate-spin"></div>
       </div>
 
       <!-- User Info -->
-      <div *ngIf="!loading && userData" class="space-y-2">
-        <p class="text-gray-700 text-lg">Welcome, <span class="font-semibold">{{ userData.user.email }}</span> 👋</p>
-        <p class="text-gray-500 text-sm">This is your secure dashboard. Feel free to explore.</p>
+      <div *ngIf="!loading && userData" class="text-white space-y-2 text-center">
+        <p class="text-lg">Hello, <span class="font-semibold">{{ userData.user.email }}</span> 👋</p>
+        <p class="text-sm opacity-90">Here’s your private space to capture thoughts, memories, and ideas.</p>
       </div>
 
       <!-- Error -->
-      <div *ngIf="error" class="text-red-500 mt-4 text-sm text-center">
+      <div *ngIf="error" class="text-red-300 mt-4 text-sm text-center">
         {{ error }}
       </div>
+
     </div>
   </main>
 </div>
