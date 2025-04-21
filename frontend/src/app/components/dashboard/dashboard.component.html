@@ -1,0 +1,33 @@
+<div class="min-h-screen bg-[url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center flex flex-col">
+  
+  <!-- Header -->
+  <app-header></app-header>
+
+  <!-- Main Dashboard Card -->
+  <main class="flex-grow flex items-center justify-center px-4 py-10">
+    <div class="backdrop-blur-md bg-white/20 border border-white/30 shadow-2xl rounded-2xl p-8 w-full max-w-2xl transition-all hover:shadow-indigo-500/30">
+
+      <!-- Title -->
+      <h2 class="text-4xl font-bold text-white text-center mb-6">
+        📓 Welcome to Your Diary Dashboard
+      </h2>
+
+      <!-- Loading Spinner -->
+      <div *ngIf="loading" class="flex justify-center items-center py-6">
+        <div class="w-10 h-10 border-4 border-indigo-400 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+
+      <!-- User Info -->
+      <div *ngIf="!loading && userData" class="text-white space-y-2 text-center">
+        <p class="text-lg">Hello, <span class="font-semibold">{{ userData.user.email }}</span> 👋</p>
+        <p class="text-sm opacity-90">Here’s your private space to capture thoughts, memories, and ideas.</p>
+      </div>
+
+      <!-- Error -->
+      <div *ngIf="error" class="text-red-300 mt-4 text-sm text-center">
+        {{ error }}
+      </div>
+
+    </div>
+  </main>
+</div>
