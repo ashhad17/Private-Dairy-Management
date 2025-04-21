@@ -31,7 +31,7 @@
     <h2>Welcome back, {{userName}}</h2>
     <p>Track your thoughts, emotions, and memories with your personal diary</p>
     <div class="hero-action" style="display: flex;justify-content: center;align-items: center;">
-      <button class="btn btn-primary">
+      <button class="btn btn-primary" (click)="openModal()">
         <i class="fas fa-pencil-alt"></i> Write New Entry
       </button>
     </div>
@@ -54,9 +54,9 @@
   <!-- Mood filters -->
   <h4>Filter by Mood</h4>
   <div class="mood-filters">
-    <button class="mood-filter active" *ngFor="let mood of moods" (click)="filterByMood(mood.name)">
-      <span class="mood-emoji happy-mood">{{mood.emoji}}</span>
-      <span class="mood-name">{{mood.name}}</span>
+    <button class="mood-filter" *ngFor="let mood of moods" [class.active]="selectedMood === mood.value" (click)="filterByMood(mood.value)">
+      <span class="mood-emoji">{{mood.label}}</span>
+      <!-- <span class="mood-name">{{mood.name}}</span> -->
     </button>
 
   </div>
@@ -64,12 +64,18 @@
   <!-- Date filters -->
   <div class="date-filters">
     <div class="date-group">
-      <label class="date-label" for="start-date">Select Date</label>
-      <input type="date" id="start-date" [(ngModel)]="selectedDate" (change)="onDateChange($event)" class="date-input">
+      <label class="date-label" for="start-date">From Date</label>
+      <input type="date" id="start-date" [(ngModel)]="updatedFromDate" (change)="onDateChange($event)" class="date-input">
+    </div>
+    <div class="date-group">
+      <label class="date-label" for="start-date">To Date</label>
+      <input type="date" id="start-date" [(ngModel)]="updatedToDate" (change)="onDateChange($event)" class="date-input">
     </div>
 
     <div class="date-group" style="max-width: 150px; align-self: flex-end;">
-      <button class="btn btn-primary" style="width: 100%;">Apply Filter</button>
+      <button class="btn btn-primary"  (click)="filterByUpdatedDate()">Apply Filter</button>
+      <button class="btn btn-primary" (click)="clearDateFilter()">Clear Date Filter</button>
+
     </div>
   </div>
 </section>
@@ -134,17 +140,17 @@
           <!-- <div class="entry-mood happy-mood">😊</div> -->
           <div class="entry-mood">
             <span [ngSwitch]="entry.mood">
-              <span *ngSwitchCase="'happy'">Happy 😊</span>
-              <span *ngSwitchCase="'sad'">Sad 😔</span>
-              <span *ngSwitchCase="'angry'">Angry 😡</span>
-              <span *ngSwitchCase="'excited'">Excited 😃</span>
-              <span *ngSwitchCase="'neutral'">Neutral 😐</span>
-              <span *ngSwitchCase="'anxious'">Anxious 😰</span>
-              <span *ngSwitchCase="'grateful'">Grateful 🙏</span>
-              <span *ngSwitchCase="'lonely'">Lonely 😞</span>
-              <span *ngSwitchCase="'motivated'">Motivated 💪</span>
-              <span *ngSwitchCase="'tired'">Tired 😴</span>
-              <span *ngSwitchCase="'confused'">Confused 😕</span>
+              <span *ngSwitchCase="'Happy'">Happy 😊</span>
+              <span *ngSwitchCase="'Sad'">Sad 😔</span>
+              <span *ngSwitchCase="'Angry'">Angry 😡</span>
+              <span *ngSwitchCase="'Excited'">Excited 😃</span>
+              <span *ngSwitchCase="'Neutral'">Neutral 😐</span>
+              <span *ngSwitchCase="'Anxious'">Anxious 😰</span>
+              <span *ngSwitchCase="'Grateful'">Grateful 🙏</span>
+              <span *ngSwitchCase="'Lonely'">Lonely 😞</span>
+              <span *ngSwitchCase="'Motivated'">Motivated 💪</span>
+              <span *ngSwitchCase="'Tired'">Tired 😴</span>
+              <span *ngSwitchCase="'Confused'">Confused 😕</span>
               <span *ngSwitchDefault>{{ entry.mood || 'No mood set' }}</span>
 
             </span>
@@ -158,8 +164,8 @@
         <p>{{ entry.content | slice:0:100 }}{{ entry.content.length > 100 ? '...' : '' }}</p>
         <div class="entry-fade"></div>
       </div>
-      <div class="entry-tags" *ngFor="let tag of getTags(entry)">
-        <div class="entry-tag"> {{ tag }}</div>
+      <div class="entry-tags" >
+        <div class="entry-tag" *ngFor="let tag of getTags(entry)"> {{ tag }}</div>
       </div>
       <div class="entry-actions">
         <div class="action-btn view-btn" (click)="openViewModal(entry)"><i class="fas fa-eye"></i> View</div>
@@ -208,11 +214,18 @@
     <div style="margin-bottom: 1.5rem;">
       <strong>Mood:</strong>
       <span [ngSwitch]="viewEntry.mood" style="margin-left: 0.5rem; font-size: 1.5rem;">
-        <span *ngSwitchCase="'happy'">😊</span>
-        <span *ngSwitchCase="'sad'">😔</span>
-        <span *ngSwitchCase="'angry'">😡</span>
-        <span *ngSwitchCase="'excited'">😃</span>
-        <span *ngSwitchDefault>{{ viewEntry.mood || 'No mood set' }}</span>
+        <span *ngSwitchCase="'Happy'">Happy 😊</span>
+        <span *ngSwitchCase="'Sad'">Sad 😔</span>
+        <span *ngSwitchCase="'Angry'">Angry 😡</span>
+        <span *ngSwitchCase="'Excited'">Excited 😃</span>
+        <span *ngSwitchCase="'Neutral'">Neutral 😐</span>
+        <span *ngSwitchCase="'Anxious'">Anxious 😰</span>
+        <span *ngSwitchCase="'Grateful'">Grateful 🙏</span>
+        <span *ngSwitchCase="'Lonely'">Lonely 😞</span>
+        <span *ngSwitchCase="'Motivated'">Motivated 💪</span>
+        <span *ngSwitchCase="'Tired'">Tired 😴</span>
+        <span *ngSwitchCase="'Confused'">Confused 😕</span>
+        <span *ngSwitchDefault>{{ viewEntry || 'No mood set' }}</span>
       </span>
     </div>
 
@@ -230,7 +243,7 @@
       <span class="loading-text">Loading...</span>
     </div>
   </div>
-  
+
   <div class="modal-content">
     <div class="modal-header">
       <h2 class="modal-title">{{ editMode ? 'Edit Entry' : 'Create New Entry' }}</h2>
@@ -250,12 +263,14 @@
 
         <div class="form-group">
           <label class="form-label">How are you feeling?</label>
-          <div class="mood-selector" >
-            <div class="mood-option" *ngFor="let mood of moods" [class.selected]="newEntry.mood === mood.name"
-              (click)="newEntry.mood = mood.name">
-              <span class="mood-emoji">{{ mood.emoji }}</span>
-              <span class="mood-name">{{ mood.name }}</span>
-            </div>
+          <div class="mood-selector">
+            <div 
+    *ngFor="let mood of moods" 
+    class="mood-option" 
+    [class.selected]="newEntry.mood === mood.value"
+    (click)="selectMood(mood.value)">
+    {{ mood.label }}
+  </div>
 
           </div>
 
@@ -270,23 +285,34 @@
             class="form-control"></textarea>
 
         </div>
+        <div class="ai-button">
+
+          <button type="button" (click)="analyzeContent()" class="btn btn-primary" id="save-entry">
+            <i class="fa-solid fa-robot"></i>Can’t think of a Title or Mood? Let AI handle it
+          </button>
+        </div>
+
+        
+
 
         <!-- Tags -->
         <div class="form-group">
-          <label class="form-label" for="entry-tags">Tags</label>
-          <div class="tags-input-container" *ngFor="let tag of newEntry.tags; let i = index">
-            {{ tag }}
-            <span class="remove-tag" (click)="removeTag(i)">×</span>
+          <label class="form-label">Tags</label>
+          <div class="tags-input-container" (click)="tagInput?.focus()">
+            <span class="tag" *ngFor="let tag of newEntry.tags; let i = index">
+              {{ tag }}
+              <button type="button" class="remove-tag" (click)="removeTag(i)">×</button>
+            </span>
+            <input
+              #tagInput
+              type="text"
+              [(ngModel)]="tagInputValue"
+              name="tagInput"
+              class="tag-input"
+              (keydown.enter)="addTag()"
+              placeholder="Type and press Enter..."
+            />
           </div>
-          <input
-            type="text"
-            class="tags-input"
-            [(ngModel)]="newEntry.tag"
-            (keydown.enter)="addTag()"
-            placeholder="Type and press enter"
-            name="tagInput"
-            [ngModelOptions]="{standalone: true}"
-          />
         </div>
         
       </form>
@@ -296,9 +322,7 @@
       <button class="btn btn-primary" id="save-entry" (click)="submitEntry()">
         <i class="fas fa-save" style="margin-right: 8px;"></i> Save Entry
       </button>
-      <button type="button" (click)="analyzeContent()" class="btn btn-primary" id="save-entry">
-        <i class="fas fa-save" ></i>Can’t think of a Title or Mood? Let AI handle it
-      </button>
+      
     </div>
   </div>
 </div>

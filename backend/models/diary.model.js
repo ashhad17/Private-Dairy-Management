@@ -8,7 +8,7 @@ const diaryEntrySchema = new mongoose.Schema({
   },
   title: {
     type: String,
-    required: false // Optional, we can suggest using AI
+    required: false
   },
   content: {
     type: String,
@@ -16,10 +16,13 @@ const diaryEntrySchema = new mongoose.Schema({
   },
   mood: {
     type: String,
-    enum: ['happy', 'sad', 'angry', 'anxious', 'neutral'],
-    default: 'neutral'
+    enum: [
+      'Happy', 'Sad', 'Angry', 'Excited', 'Neutral', 'Anxious', 'Grateful',
+      'Lonely', 'Motivated', 'Tired', 'Confused', 'Relaxed', 'Stressed', 'Bored'
+    ],
+    default: 'Neutral'
   },
-  tags: [String], // ["work", "personal", "travel"]
+  tags: [String],
   createdAt: {
     type: Date,
     default: Date.now

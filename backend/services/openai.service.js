@@ -14,10 +14,15 @@ Given the following diary entry content:
 
 Suggest:
 1. A short, relevant title for the diary entry.
-2. A mood (one of: happy, sad, angry, anxious, neutral).
+2. A mood (one of: 
+
+  'Happy', 'Sad', 'Angry', 'Excited', 'Neutral', 'Anxious', 'Grateful',
+  'Lonely', 'Motivated', 'Tired', 'Confused', 'Relaxed', 'Stressed', 'Bored'
+
+    ).
 
 Return the result as JSON like:
-{ "title": "Your Title", "mood": "mood" }
+{ "title": "Your Title", "mood": "Mood" ,"tags": [" "]}
 `;
 
   try {

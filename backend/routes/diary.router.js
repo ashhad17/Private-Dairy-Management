@@ -11,6 +11,7 @@ router.get('/', diary.getEntries);
 
 router.get('/calendar', diary.getCalendarView);
 router.get('/filter', diary.getFilteredEntries);
+router.get('/filter-by-date', diary.filterByUpdatedDate);
 
 router.post('/reminder-preference', auth, async (req, res) => {
   try {

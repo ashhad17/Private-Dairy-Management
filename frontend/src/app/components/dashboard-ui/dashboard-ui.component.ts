@@ -19,7 +19,7 @@ export class HomeComponent implements OnInit {
     title: '',
     content: '',
     tags: [''],
-    mood: 'happy', // Default mood
+    mood: 'Happy', // Default mood
   };
   showModal: boolean = false;
   editMode: boolean = false;
@@ -29,20 +29,31 @@ export class HomeComponent implements OnInit {
   viewEntry: any = null;
 
   showReminderModal: boolean = false;
-  moods: { name: string, emoji: string }[] = [
-    { name: 'All', emoji: '📋' },
-    { name: 'Happy', emoji: '😊' },
-    { name: 'Sad', emoji: '😔' },
-    { name: 'Angry', emoji: '😡' },
-    { name: 'Excited', emoji: '😃' },
-    { name: 'Neutral', emoji: '😐' },
-    { name: 'Anxious', emoji: '😰' },
-    { name: 'Grateful', emoji: '🙏' },
-    { name: 'Lonely', emoji: '😞' },
-    { name: 'Motivated', emoji: '💪' },
-    { name: 'Tired', emoji: '😴' },
-    { name: 'Confused', emoji: '😕' },
+  moods = [
+    
+    { value: 'All', label: 'All ' },
+    { value: 'Happy', label: 'Happy 😊' },
+    { value: 'Sad', label: 'Sad 😔' },
+    { value: 'Angry', label: 'Angry 😡' },
+    { value: 'Excited', label: 'Excited 😃' },
+    { value: 'Neutral', label: 'Neutral 😐' },
+    { value: 'Anxious', label: 'Anxious 😰' },
+    { value: 'Grateful', label: 'Grateful 🙏' },
+    { value: 'Lonely', label: 'Lonely 😞' },
+    { value: 'Motivated', label: 'Motivated 💪' },
+    { value: 'Tired', label: 'Tired 😴' },
+    { value: 'Confused', label: 'Confused 😕' },
+    { value: 'Relaxed', label: 'Relaxed 🧘‍♂️' },
+    { value: 'Stressed', label: 'Stressed 😣' },
+    { value: 'Bored', label: 'Bored 😐' }
   ];
+  updatedFromDate: string='';
+  updatedToDate: string='';
+  
+  
+  selectMood(mood: string) {
+    this.newEntry.mood = mood;
+  }
   
   moodsBtn: string[] = [
     'All',
@@ -63,6 +74,7 @@ export class HomeComponent implements OnInit {
   selectedDate: string = '';
   tagInput = '';
 
+  tagInputValue: string = '';
   addTagFromInput(event: Event): void {
     event.preventDefault(); // prevent form submit
     const value = this.tagInput.trim();
@@ -85,7 +97,7 @@ filterEntriesByDate(date: Date) {
 
   filterByMood(mood: string): void {
     this.selectedMood = mood;
-    this.filter = mood === 'All' ? '' : mood.toLowerCase();
+    this.filter = mood === 'All' ? '' : mood.charAt(0).toUpperCase() + mood.slice(1).toLowerCase();
     this.applyFilter(); // reuse your existing logic
   }
   
@@ -172,9 +184,31 @@ closeReminderModal() {
     });
   }
   
+  clearDateFilter(): void {
+    this.updatedFromDate = '';
+    this.updatedToDate = '';
+    this.loadEntries();
+  }
   
   
-
+  filterByUpdatedDate(): void {
+    this.isLoading = true;
+    const from = this.updatedFromDate ? new Date(this.updatedFromDate).toISOString() : undefined;
+    const to = this.updatedToDate ? new Date(this.updatedToDate).toISOString() : undefined;
+  
+    this.diaryService.filterEntriesByUpdatedDate(from, to).subscribe({
+      next: (data) => {
+        this.entries = data;
+        this.isLoading = false;
+      },
+      error: (error: any) => {
+        console.error('Error filtering by updated date:', error);
+        this.errorMessage = 'Failed to filter by updated date';
+        this.isLoading = false;
+      }
+      
+    });
+  }
   loadEntries() {
     this.isLoading = true;
     this.diaryService.getEntries().subscribe({
@@ -196,7 +230,7 @@ closeReminderModal() {
     this.newEntry = { 
       title: '', 
       content: '', 
-      tags: [''], 
+      tags: [] as string[],
       mood: 'happy' 
     };
     this.errorMessage = '';
@@ -229,6 +263,7 @@ saveReminderPreference() {
         console.log('Analyzed result:', result);
         this.newEntry.title = result.title || '';
         this.newEntry.mood = result.mood || 'neutral';
+        this.newEntry.tags = result.tags || [];
         this.isLoading = false;
       },
       error: (err) => {
@@ -259,22 +294,42 @@ saveReminderPreference() {
     this.editMode = false;
   }
 
-  addTag() {
-    this.newEntry.tags.push('');
-  }
+  // addTag() {
+  //   this.newEntry.tags.push('');
+  // }
 
+  // removeTag(index: number) {
+  //   if (this.newEntry.tags.length > 1) {
+  //     this.newEntry.tags.splice(index, 1);
+  //   } else {
+  //     this.newEntry.tags[0] = ''; // Keep at least one empty tag
+  //   }
+  // }
+
+  addTag() {
+    const tag = this.tagInputValue.trim();
+    console.log('Adding tag:', this.newEntry.tags);
+    if (tag && !this.newEntry.tags.includes(tag)) {
+      this.newEntry.tags.push(tag);
+    }
+    this.tagInputValue = '';
+  }
+  
   removeTag(index: number) {
-    if (this.newEntry.tags.length > 1) {
-      this.newEntry.tags.splice(index, 1);
-    } else {
-      this.newEntry.tags[0] = ''; // Keep at least one empty tag
+    this.newEntry.tags.splice(index, 1);
+  }
+  
+  removeLastTag(event: KeyboardEvent) {
+    if (!this.tagInputValue && this.newEntry.tags.length && event.key === 'Backspace') {
+      this.newEntry.tags.pop();
     }
   }
-
+  
   submitEntry() {
     this.isLoading = true;
-  
+  this.newEntry.mood=this.newEntry.mood.charAt(0).toUpperCase() + this.newEntry.mood.slice(1).toLowerCase();
     const payload = {
+      
       ...this.newEntry,
       tags: this.newEntry.tags.filter((t: string) => t.trim()) // Send as array!
     };

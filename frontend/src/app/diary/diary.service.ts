@@ -21,8 +21,29 @@ export class DiaryService {
   getFilteredEntries(tags: string): Observable<any> {
     return this.http.get(`http://localhost:5000/api/diary/filter?mood=${encodeURIComponent(tags)}`);
   }
+
+  // getFilteredEntries(tags: string = '', mood: string = '', updatedFrom?: string, updatedTo?: string) {
+  //   let params: any = {};
+  
+  //   if (tags) params.tags = tags;
+  //   if (mood && mood !== 'All') params.mood = mood;
+  //   if (updatedFrom) params.updatedFrom = updatedFrom;
+  //   if (updatedTo) params.updatedTo = updatedTo;
+  
+  //   return this.http.get<any[]>(`${this.apiUrl}/entries/filter`, { params });
+  // }
+  
   // http://localhost:5000/api/diary/filter?mood=sad
   // Create a new diary entry
+
+  filterEntriesByUpdatedDate(fromDate?: string, toDate?: string) {
+    const params: any = {};
+    if (fromDate) params.updatedFrom = fromDate;
+    if (toDate) params.updatedTo = toDate;
+  
+    return this.http.get<any[]>('http://localhost:5000/api/entries/filter-by-date', { params });
+  }
+  
   createEntry(entry: any): Observable<any> {
     return this.http.post(`${this.apiUrl}`, entry);
   }

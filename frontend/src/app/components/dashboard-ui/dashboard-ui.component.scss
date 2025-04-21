@@ -138,6 +138,13 @@
     transform: rotate(360deg);
   }
 }
+.entry-tag {
+  padding: 5px 10px;
+  background-color: #f0f0f0;
+  border-radius: 20px;
+  font-size: 12px;
+  color: var(--text-light);
+}
 
 .shape-2 {
   width: 100px;
@@ -201,33 +208,14 @@
 }
 
 .mood-emoji {
-  font-size: 30px;
+  font-size: 18px;
   margin-bottom: 8px;
+  font-weight: bold;
 }
 
 .mood-name {
   font-size: 14px;
   font-weight: 500;
-}
-
-.happy-mood {
-  color: var(--happy);
-}
-
-.excited-mood {
-  color: var(--excited);
-}
-
-.calm-mood {
-  color: var(--calm);
-}
-
-.sad-mood {
-  color: var(--sad);
-}
-
-.angry-mood {
-  color: var(--angry);
 }
 
 /* Date filters */
@@ -308,6 +296,12 @@
   gap: 20px;
 }
 
+.card-tags{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+  align-items: center;
+}
 .entry-card {
   background-color: white;
   border-radius: 12px;
@@ -530,13 +524,24 @@
   }
   
   .mood-filter {
-    min-width: 60px;
-    padding: 10px;
+    padding: 8px 12px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    background: #f7f7f7;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s ease;
   }
   
-  .mood-emoji {
-    font-size: 25px;
+  .mood-filter.active {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #0056b3;
+    font-weight: bold;
   }
+  
+  
+  
   
   .date-filters {
     flex-direction: column;
@@ -732,9 +737,17 @@
       max-height: 90vh; /* sets max height relative to viewport */
       overflow-y: auto; /* makes it scrollable */
       width: 100%;
-      max-width: 600px;
+      max-width: 1000px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
       position: relative;
+     
+    }
+    .ai-button
+    {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 10px 5px;
     }
     .modal-content::-webkit-scrollbar {
       width: 8px;
@@ -789,7 +802,7 @@
       padding: 20px 30px;
       border-top: 1px solid var(--border);
       display: flex;
-      justify-content: flex-end;
+      justify-content:space-between;
       gap: 15px;
     }
 
@@ -857,10 +870,7 @@
       background-color: rgba(108, 99, 255, 0.1);
     }
 
-    .mood-emoji {
-      font-size: 30px;
-      margin-bottom: 8px;
-    }
+  
 
     .mood-name {
       font-size: 14px;
@@ -886,11 +896,18 @@
     .angry-mood {
       color: var(--angry);
     }
-
+.tag-input{flex: 1;
+  border: none;
+  outline: none;
+  padding: 5px;
+  font-size: 14px;
+  min-width: 100px;
+}
     /* Tags input */
     .tags-input-container {
-      border: 1px solid var(--border);
+      // border: 1px solid var(--border);
       border-radius: 8px;
+      outline: none;
       padding: 8px 12px;
       display: flex;
       flex-wrap: wrap;
@@ -905,16 +922,16 @@
       box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
     }
 
-    .tag {
-      background-color: rgba(108, 99, 255, 0.1);
-      color: var(--primary);
-      padding: 5px 10px;
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 14px;
-    }
+    // .tag {
+    //   background-color: rgba(108, 99, 255, 0.1);
+    //   color: var(--primary);
+    //   padding: 5px 10px;
+    //   border-radius: 20px;
+    //   display: flex;
+    //   align-items: center;
+    //   gap: 5px;
+    //   font-size: 14px;
+    // }
 
     .tag-close {
       background: none;
@@ -934,7 +951,28 @@
       font-size: 14px;
       min-width: 100px;
     }
-
+    .tag {
+      background-color: var(--primary);
+      color: white;
+      padding: 5px 10px;
+      margin: 3px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      font-size: 0.85rem;
+    }
+    
+    .remove-tag {
+      background: none;
+      border: none;
+      color: white;
+      margin-left: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+    
+    
     /* View entry modal */
     .entry-view-meta {
       display: flex;
@@ -1056,7 +1094,7 @@
       }
       
       .mood-emoji {
-        font-size: 24px;
+        font-size: 13px;
       }
     }
 

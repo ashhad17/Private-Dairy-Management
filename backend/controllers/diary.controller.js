@@ -27,6 +27,26 @@ exports.getEntries = async (req, res) => {
   const entries = await DiaryEntry.find({ user: req.user.id }).sort({ createdAt: -1 });
   res.json(entries);
 };
+// GET /entries/filter-by-date
+exports.filterByUpdatedDate = async (req, res) => {
+  const { updatedFrom, updatedTo } = req.query;
+  const query = { user: req.user.id };
+
+  if (updatedFrom || updatedTo) {
+    query.updatedAt = {};
+    if (updatedFrom) query.updatedAt.$gte = new Date(updatedFrom);
+    if (updatedTo) query.updatedAt.$lte = new Date(updatedTo);
+  }
+
+  try {
+    const entries = await DiaryEntry.find(query).sort({ updatedAt: -1 });
+    res.json(entries);
+  } catch (err) {
+    console.error("Error fetching date-filtered entries:", err);
+    res.status(500).json({ message: 'Failed to filter by date', error: err.message });
+  }
+};
+
 
 // Get Single
 // Get Single
