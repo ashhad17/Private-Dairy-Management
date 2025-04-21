@@ -5,10 +5,11 @@ const { Parser } = require('json2csv');
 // Create
 exports.createEntry = async (req, res) => {
   try {
-    const { title, content, mood, tags } = req.body;
+    const {name, title, content, mood, tags } = req.body;
 
     const entry = await DiaryEntry.create({
       user: req.user.id,
+      name,
       title,
       content,
       mood,

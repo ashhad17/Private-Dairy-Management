@@ -20,6 +20,8 @@ app.use('/auth', authRoutes);
 
 app.use('/api/diary', diaryRoutes);
 app.use('/api/diary-ai', require('./routes/diary-ai.routes'));
+// PUT /api/user/reminder-preference
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on ${PORT}`));

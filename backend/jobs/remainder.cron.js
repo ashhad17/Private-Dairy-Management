@@ -1,17 +1,18 @@
 const cron = require('node-cron');
+const moment = require('moment');
 const User = require('../models/user.model');
 const { sendReminderEmail } = require('../utils/mailer');
 
-// Run every day at 8:00 AM server time
-cron.schedule('0 8 * * *', async () => {
-  console.log('Sending daily reminder emails...');
-  const users = await User.find({ emailReminders: true });
 
-  for (const user of users) {
-    try {
-      await sendReminderEmail(user.email);
-    } catch (err) {
-      console.error(`Failed to send email to ${user.email}`, err.message);
-    }
+cron.schedule('* * * * *', async () => {
+  const now = moment().format('HH:mm');
+
+  const usersToNotify = await User.find({
+    reminderEnabled: true,
+    reminderTime: now, // e.g., "20:00"
+  });
+
+  for (const user of usersToNotify) {
+    await sendReminderEmail(user.email, user.name);
   }
 });

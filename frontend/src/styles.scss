@@ -1,2 +1,36 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
+// * {
+//     margin: 0;
+//     padding: 0;
+//     box-sizing: border-box;
+//     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+//   }
+
+  :root {
+    --primary: #6c63ff;
+    --dark-primary: #5a52d5;
+    --light-bg: #f5f7fa;
+    --border: #e0e0e0;
+    --text: #333;
+    --text-light: #777;
+    --happy: #ffc107;
+    --excited: #ff7043;
+    --calm: #4fc3f7;
+    --sad: #78909c;
+    --angry: #ef5350;
+    --shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+  }
+
+  // body {
+  //   margin: 0;
+  // font-family: Arial, sans-serif;
+  // background: linear-gradient(to bottom right, #f3f4f6, #e0e7ff);
+  // min-height: 100vh;
+  // display: flex;
+  // align-items: center;
+  // justify-content: center;
+    
+
+  // }

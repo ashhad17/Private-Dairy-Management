@@ -1,0 +1,349 @@
+<!-- Loading Indicator -->
+<div *ngIf="isLoading" class="loading-backdrop">
+  <div class="loading-container">
+    <div class="loading-spinner"></div>
+    <span class="loading-text">Loading...</span>
+  </div>
+</div>
+<nav class="navbar">
+  <div class="navbar-brand">
+    <span class="logo-icon">📔</span>
+    <h1>MyDiary</h1>
+  </div>
+  <div class="navbar-actions">
+    <button class="btn btn-outline" (click)="openReminderModal()">
+      <i class="fas fa-bell"></i> Set Reminder
+    </button>
+    <button class="btn btn-primary" (click)="logout()">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </button>
+  </div>
+
+</nav>
+
+<section class="hero">
+  <div class="hero-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+  </div>
+  <div class="hero-content">
+    <h2>Welcome back, {{userName}}</h2>
+    <p>Track your thoughts, emotions, and memories with your personal diary</p>
+    <div class="hero-action" style="display: flex;justify-content: center;align-items: center;">
+      <button class="btn btn-primary">
+        <i class="fas fa-pencil-alt"></i> Write New Entry
+      </button>
+    </div>
+  </div>
+</section>
+<section class="filters-section">
+  <div class="section-header">
+    <h3>Filter Entries</h3>
+  </div>
+
+  <!-- Quick date filters -->
+  <!-- <div class="quick-filters">
+    <div class="quick-filter active">All Time</div>
+    <div class="quick-filter">Today</div>
+    <div class="quick-filter">This Week</div>
+    <div class="quick-filter">This Month</div>
+    <div class="quick-filter">Last Month</div>
+  </div> -->
+
+  <!-- Mood filters -->
+  <h4>Filter by Mood</h4>
+  <div class="mood-filters">
+    <button class="mood-filter active" *ngFor="let mood of moods" (click)="filterByMood(mood.name)">
+      <span class="mood-emoji happy-mood">{{mood.emoji}}</span>
+      <span class="mood-name">{{mood.name}}</span>
+    </button>
+
+  </div>
+
+  <!-- Date filters -->
+  <div class="date-filters">
+    <div class="date-group">
+      <label class="date-label" for="start-date">Select Date</label>
+      <input type="date" id="start-date" [(ngModel)]="selectedDate" (change)="onDateChange($event)" class="date-input">
+    </div>
+
+    <div class="date-group" style="max-width: 150px; align-self: flex-end;">
+      <button class="btn btn-primary" style="width: 100%;">Apply Filter</button>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Error Message -->
+<div *ngIf="errorMessage" class="error-message">
+  {{ errorMessage }}
+  <button (click)="errorMessage = ''" class="error-close">&times;</button>
+</div>
+
+<!-- Hero Section -->
+
+<!-- reminder-settings.component.html -->
+<!-- Reminder Modal -->
+<!-- Reminder Modal -->
+<div *ngIf="showReminderModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+  <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+    <h3 class="text-xl font-semibold mb-4">Reminder Settings</h3>
+
+    <form (ngSubmit)="saveReminderPreference()">
+      <label class="block mb-2 text-sm">
+        <input type="checkbox" [(ngModel)]="reminderEnabled" name="reminderEnabled" class="mr-2" />
+        Enable Daily Reminder Email
+      </label>
+
+      <div *ngIf="reminderEnabled">
+        <label class="block mb-1 text-sm">Reminder Time:</label>
+        <input type="time" [(ngModel)]="reminderTime" name="reminderTime" class="border p-2 rounded w-full" />
+      </div>
+
+      <div class="flex justify-end gap-4 mt-4">
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          (click)="closeReminderModal()">Save</button>
+        <button type="button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition"
+          (click)="closeReminderModal()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Create Entry Button -->
+<div style="text-align: center;">
+  <button (click)="openModal()" class="create-btn">
+    Create New Entry
+  </button>
+</div>
+
+<section class="entries-section">
+  <div class="entries-header">
+    <h3>Your Diary Entries</h3>
+    <div class="entries-count">12 Entries</div>
+  </div>
+
+  <div class="entries-grid" *ngIf="entries.length; else noEntries">
+    <!-- Entry 1 -->
+    <div class="entry-card" *ngFor="let entry of entries; let i = index">
+      <div class="entry-header">
+        <div class="entry-title">
+          <h4>{{ entry.title }}</h4>
+          <!-- <div class="entry-mood happy-mood">😊</div> -->
+          <div class="entry-mood">
+            <span [ngSwitch]="entry.mood">
+              <span *ngSwitchCase="'happy'">Happy 😊</span>
+              <span *ngSwitchCase="'sad'">Sad 😔</span>
+              <span *ngSwitchCase="'angry'">Angry 😡</span>
+              <span *ngSwitchCase="'excited'">Excited 😃</span>
+              <span *ngSwitchCase="'neutral'">Neutral 😐</span>
+              <span *ngSwitchCase="'anxious'">Anxious 😰</span>
+              <span *ngSwitchCase="'grateful'">Grateful 🙏</span>
+              <span *ngSwitchCase="'lonely'">Lonely 😞</span>
+              <span *ngSwitchCase="'motivated'">Motivated 💪</span>
+              <span *ngSwitchCase="'tired'">Tired 😴</span>
+              <span *ngSwitchCase="'confused'">Confused 😕</span>
+              <span *ngSwitchDefault>{{ entry.mood || 'No mood set' }}</span>
+
+            </span>
+          </div>
+        </div>
+        <div class="entry-time">
+          <i class="far fa-clock"></i> Posted {{ entry.createdAt | relativeTime }}
+        </div>
+      </div>
+      <div class="entry-content">
+        <p>{{ entry.content | slice:0:100 }}{{ entry.content.length > 100 ? '...' : '' }}</p>
+        <div class="entry-fade"></div>
+      </div>
+      <div class="entry-tags" *ngFor="let tag of getTags(entry)">
+        <div class="entry-tag"> {{ tag }}</div>
+      </div>
+      <div class="entry-actions">
+        <div class="action-btn view-btn" (click)="openViewModal(entry)"><i class="fas fa-eye"></i> View</div>
+        <div class="action-btn edit-btn" (click)="openEditModal(entry)"><i class="fas fa-edit"></i> Edit</div>
+        <div class="action-btn delete-btn" (click)="deleteEntry(entry._id)"><i class="fas fa-trash"></i> Delete</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<ng-template #noEntries>
+  <div class="empty-state">
+    <p>No entries found. Create your first entry!</p>
+  </div>
+</ng-template>
+
+<button class="new-entry-fab" (click)="openModal()">
+
+  <span class="new-entry-icon"><i class="fas fa-plus"></i></span>
+</button>
+
+
+
+<!-- View Entry Modal -->
+<div *ngIf="viewEntry" class="modal-overlay">
+  <div class="modal-content">
+    <div style="display: flex;justify-content: space-between; align-items: center;">
+
+      <h2 class="modal-title">{{ viewEntry.title }}</h2>
+      <button class="close-modal" id="close-new-entry" (click)="closeViewModal()">×</button>
+    </div>
+    <div class="text-sm text-gray-500 italic mt-2">
+      Posted {{ viewEntry.createdAt | relativeTime }}
+    </div>
+    <p style="margin-bottom: 1.5rem; white-space: pre-wrap; line-height: 1.6;">{{ viewEntry.content }}</p>
+
+    <div style="margin-bottom: 1rem;">
+      <strong>Tags:</strong>
+      <div class="card-tags" style="margin-top: 0.5rem;">
+        <span *ngFor="let tag of getTags(viewEntry)" class="tag">
+          {{ tag }}
+        </span>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 1.5rem;">
+      <strong>Mood:</strong>
+      <span [ngSwitch]="viewEntry.mood" style="margin-left: 0.5rem; font-size: 1.5rem;">
+        <span *ngSwitchCase="'happy'">😊</span>
+        <span *ngSwitchCase="'sad'">😔</span>
+        <span *ngSwitchCase="'angry'">😡</span>
+        <span *ngSwitchCase="'excited'">😃</span>
+        <span *ngSwitchDefault>{{ viewEntry.mood || 'No mood set' }}</span>
+      </span>
+    </div>
+
+    <button (click)="closeViewModal()" class="btn-cancel">
+      Close
+    </button>
+  </div>
+</div>
+
+<!-- New model For creating -->
+<div *ngIf="showModal" class="modal-overlay">
+  <div *ngIf="isLoading" class="loading-backdrop">
+    <div class="loading-container">
+      <div class="loading-spinner"></div>
+      <span class="loading-text">Loading...</span>
+    </div>
+  </div>
+  
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title">{{ editMode ? 'Edit Entry' : 'Create New Entry' }}</h2>
+      <button class="close-modal" id="close-new-entry" (click)="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <form id="new-entry-form" (ngSubmit)="submitEntry()" #entryForm="ngForm">
+        <!-- Title -->
+        <div class="form-group">
+          <label class="form-label" for="entry-title">Title</label>
+          <!-- <input type="text" [(ngModel)]="newEntry.title" id="entry-title" class="form-control" placeholder="Give your entry a title..."> -->
+          <input type="text" [(ngModel)]="newEntry.title" name="entryTitle" id="entry-title" class="form-control"
+            placeholder="Give your entry a title...">
+
+        </div>
+
+
+        <div class="form-group">
+          <label class="form-label">How are you feeling?</label>
+          <div class="mood-selector" >
+            <div class="mood-option" *ngFor="let mood of moods" [class.selected]="newEntry.mood === mood.name"
+              (click)="newEntry.mood = mood.name">
+              <span class="mood-emoji">{{ mood.emoji }}</span>
+              <span class="mood-name">{{ mood.name }}</span>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- Entry Content -->
+        <div class="form-group">
+          <label class="form-label" for="entry-content">What's on your mind?</label>
+          <!-- <textarea [(ngModel)]="newEntry.content" id="entry-content" class="form-control" placeholder="Write your thoughts here..."></textarea> -->
+          <textarea [(ngModel)]="newEntry.content" name="entryContent" id="entry-content"
+            class="form-control"></textarea>
+
+        </div>
+
+        <!-- Tags -->
+        <div class="form-group">
+          <label class="form-label" for="entry-tags">Tags</label>
+          <div class="tags-input-container" *ngFor="let tag of newEntry.tags; let i = index">
+            {{ tag }}
+            <span class="remove-tag" (click)="removeTag(i)">×</span>
+          </div>
+          <input
+            type="text"
+            class="tags-input"
+            [(ngModel)]="newEntry.tag"
+            (keydown.enter)="addTag()"
+            placeholder="Type and press enter"
+            name="tagInput"
+            [ngModelOptions]="{standalone: true}"
+          />
+        </div>
+        
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="cancel-entry" (click)="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="save-entry" (click)="submitEntry()">
+        <i class="fas fa-save" style="margin-right: 8px;"></i> Save Entry
+      </button>
+      <button type="button" (click)="analyzeContent()" class="btn btn-primary" id="save-entry">
+        <i class="fas fa-save" ></i>Can’t think of a Title or Mood? Let AI handle it
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const entryCards = document.querySelectorAll('.entry-card');
+
+    // Add staggered animation delay
+    entryCards.forEach((card, index) => {
+      card.style.animationDelay = `${index * 0.1}s`;
+    });
+
+    // Mood filter toggle
+    const moodFilters = document.querySelectorAll('.mood-filter');
+    moodFilters.forEach(filter => {
+      filter.addEventListener('click', function () {
+        // This just toggles the active state for demonstration
+        // In a real app, you'd filter the entries here
+        if (this.classList.contains('active')) {
+          this.classList.remove('active');
+        } else {
+          this.classList.add('active');
+        }
+      });
+    });
+
+    // Quick date filter toggle
+    const quickFilters = document.querySelectorAll('.quick-filter');
+    quickFilters.forEach(filter => {
+      filter.addEventListener('click', function () {
+        quickFilters.forEach(f => f.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+
+    // Animation for new entry button
+    const fab = document.querySelector('.new-entry-fab');
+    let rotation = 0;
+    fab.addEventListener('mouseover', function () {
+      rotation += 90;
+      this.querySelector('i').style.transform = `rotate(${rotation}deg)`;
+    });
+  });
+</script>

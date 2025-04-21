@@ -1,24 +1,10 @@
-// const mongoose = require('mongoose');
-
-// const userSchema = new mongoose.Schema({
-//   email: { type: String, required: true, unique: true },
-//   password: String,
-//   isVerified: { type: Boolean, default: false },
-//   otp: String,
-//   otpExpiry: Date,
-//   resetToken: String,
-//   resetTokenExpiry: Date,
-//   emailVerificationToken: String,
-// });
-
-// module.exports = mongoose.model('User', userSchema);
 
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: false,
+    required: true,
     trim: true
   },
 
@@ -70,8 +56,20 @@ const userSchema = new mongoose.Schema({
     default: 'user'
   },
 
-  emailReminders: { type: Boolean, default: true },
-reminderTime: { type: String, default: '08:00' },
+  // emailReminders: { type: Boolean, default: true },
+  reminderEnabled: { type: Boolean, default: false }
+,
+reminderTime: {
+  type: String,
+  default: '20:00',
+  validate: {
+    validator: function (value) {
+      return /^([01]\d|2[0-3]):([0-5]\d)$/.test(value); // Validates 'HH:mm' format
+    },
+    message: 'Invalid time format. Use HH:mm.'
+  }
+}
+,
 
 }, { timestamps: true });
 

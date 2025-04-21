@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCard } from '@angular/material/card';
@@ -13,7 +13,7 @@ import { MatCardModule } from '@angular/material/card';
 @Component({
   selector: 'app-otp-login',
   standalone: true,
-  imports: [FormsModule,CommonModule],
+  imports: [FormsModule,CommonModule,RouterModule],
   templateUrl: './otp-login.component.html',
   styleUrls: ['./otp-login.component.scss']
 })

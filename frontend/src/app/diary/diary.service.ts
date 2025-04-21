@@ -14,7 +14,9 @@ export class DiaryService {
   getEntries(): Observable<any> {
     return this.http.get(`${this.apiUrl}`);
   }
-
+ setReminder(payload: { reminderEnabled: boolean; reminderTime: string; }){
+  return this.http.post('http://localhost:5000/api/diary/reminder-preference', payload);
+ }
   // Fetch filtered diary entries
   getFilteredEntries(tags: string): Observable<any> {
     return this.http.get(`http://localhost:5000/api/diary/filter?mood=${encodeURIComponent(tags)}`);

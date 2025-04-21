@@ -43,23 +43,45 @@ const { sendMail } = require('../utils/mailer');
 const crypto = require('crypto');
 
 exports.register = async (req, res) => {
-  const { email, password } = req.body;
-  const hashed = await bcrypt.hash(password, 10);
-  const token = crypto.randomBytes(32).toString('hex');
+  try {
+    const { name, email, password } = req.body;
 
-  const user = new User({
-    email,
-    password: hashed,
-    emailVerificationToken: token
-  });
+    // Validate required fields
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: 'Name, email, and password are required.' });
+    }
 
-  await user.save();
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ message: 'A user with this email already exists.' });
+    }
 
-  await sendMail(email, 'Verify Your Email', `
-    <a href="${process.env.CLIENT_URL}/verify-email/${token}">Click to verify</a>
-  `);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const emailVerificationToken = crypto.randomBytes(32).toString('hex');
 
-  res.status(201).json({ message: 'Registered. Verify your email.' });
+    const user = new User({
+      name,
+      email,
+      password: hashedPassword,
+      emailVerificationToken
+    });
+
+    await user.save();
+
+    await sendMail(email, 'Verify Your Email', `
+      <h2>Email Verification</h2>
+      <p>Click the link below to verify your email:</p>
+      <a href="${process.env.CLIENT_URL}/verify-email/${emailVerificationToken}">
+        Verify Email
+      </a>
+    `);
+
+    res.status(201).json({ message: 'Registered successfully. Please check your email to verify your account.' });
+  } catch (err) {
+    console.error('Registration error:', err);
+    res.status(500).json({ message: 'Failed to register user', error: err.message });
+  }
 };
 
 exports.verifyEmail = async (req, res) => {
@@ -130,7 +152,7 @@ exports.verifyOtp = async (req, res) => {
   user.otpExpiry = undefined;
   await user.save();
 
-  const token = jwt.sign({ id: user._id ,email:user.email}, process.env.JWT_SECRET, { expiresIn: '1h' });
+  const token = jwt.sign({ id: user._id ,name:user.name,email:user.email}, process.env.JWT_SECRET, { expiresIn: '1h' });
   res.json({ token });
 };
 exports.login = async (req, res) => {
@@ -143,7 +165,7 @@ exports.login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Invalid email or password' });
   
-    const token = jwt.sign({ id: user._id ,email:user.email}, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user._id,name:user.name ,email:user.email}, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.json({ token });
   };
   

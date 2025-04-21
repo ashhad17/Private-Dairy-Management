@@ -1,3 +1,4 @@
+<div class="bg-[url('https://th.bing.com/th/id/OIP.78fEY4JZgs24LIP0pXZiiAHaDt?w=349&h=175&c=7&r=0&o=5&pid=1.7')] bg-cover bg-center min-h-screen flex items-center justify-center py-10 px-4">
 
 
 <div class="container">
@@ -8,6 +9,60 @@
       <span class="loading-text">Loading...</span>
     </div>
   </div>
+  <div class="navbar">
+    <h1>Secret Thought Journal</h1>
+    <div class="navbar-actions">
+      <button class="nav-btn" (click)="openReminderModal()">Set Reminder</button>
+
+      <button class="nav-btn" (click)="logout()">Logout</button>
+    </div>
+    <div class="welcome-msg text-xl font-semibold text-gray-700 ml-4">Welcome, {{ userName }}</div>
+
+  </div>
+  <div class="hero">
+    <!-- <h1>Your Private Diary</h1> -->
+    <p>Keep track of your thoughts and emotions in a private, secure space.</p>
+  </div>
+  <div class="mood-filter-section">
+    <div class="section-title">Filter by Mood</div>
+    <div class="mood-buttons">
+      <button
+        *ngFor="let mood of moods"
+        (click)="filterByMood(mood.name)"
+        class="mood-btn"
+        [class.active-mood]="selectedMood === mood.name"
+      >
+        {{ mood.emoji }} {{ mood.name }}
+      </button>
+    </div>
+  </div>
+  
+  <div class="flex flex-col items-center gap-2 md:flex-row md:justify-start md:items-end mb-4">
+    <label for="dateFilter" class="text-gray-700 font-medium">Filter by Date:</label>
+    <input
+      type="date"
+      id="dateFilter"
+      [(ngModel)]="selectedDate"
+      (change)="onDateChange($event)"
+      class="appearance-none w-full md:w-auto px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition text-gray-700 bg-white"
+    />
+  </div>
+  
+  <!-- Mood Filter Section -->
+<!-- <div class="mood-filter-section">
+  <div class="section-title">Filter by mood</div>
+  <div class="mood-buttons">
+    <button (click)="filterByMood('')" class="mood-btn">All</button>
+    <button (click)="filterByMood('happy')" class="mood-btn">Happy</button>
+    <button (click)="filterByMood('sad')" class="mood-btn">Sad</button>
+    <button (click)="filterByMood('angry')" class="mood-btn">Angry</button>
+    <button (click)="filterByMood('neutral')" class="mood-btn">Neutral</button>
+    <button (click)="filterByMood('excited')" class="mood-btn">Excited</button>
+    <button (click)="filterByMood('anxious')" class="mood-btn">Anxious</button>
+    <button (click)="filterByMood('grateful')" class="mood-btn">Grateful</button>
+  </div>
+</div> -->
+
 
   <!-- Error Message -->
   <div *ngIf="errorMessage" class="error-message">
@@ -16,10 +71,32 @@
   </div>
 
   <!-- Hero Section -->
-  <div class="hero">
-    <h1>Your Private Diary</h1>
-    <p>Keep track of your thoughts and emotions in a private, secure space.</p>
+  
+<!-- reminder-settings.component.html -->
+<!-- Reminder Modal -->
+<!-- Reminder Modal -->
+<div *ngIf="showReminderModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+  <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+    <h3 class="text-xl font-semibold mb-4">Reminder Settings</h3>
+
+    <form (ngSubmit)="saveReminderPreference()">
+      <label class="block mb-2 text-sm">
+        <input type="checkbox" [(ngModel)]="reminderEnabled" name="reminderEnabled" class="mr-2"/>
+        Enable Daily Reminder Email
+      </label>
+
+      <div *ngIf="reminderEnabled">
+        <label class="block mb-1 text-sm">Reminder Time:</label>
+        <input type="time" [(ngModel)]="reminderTime" name="reminderTime" class="border p-2 rounded w-full" />
+      </div>
+
+      <div class="flex justify-end gap-4 mt-4">
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition" (click)="closeReminderModal()">Save</button>
+        <button type="button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition" (click)="closeReminderModal()">Cancel</button>
+      </div>
+    </form>
   </div>
+</div>
 
   <!-- Create Entry Button -->
   <div style="text-align: center;">
@@ -32,7 +109,7 @@
   </div>
 
   <!-- Filter Section -->
-  <div class="filter-container">
+  <!-- <div class="filter-container">
     <input
       [(ngModel)]="filter"
       type="text"
@@ -48,13 +125,16 @@
   </div>
   <p *ngIf="filter" style="text-align: center; color: #64748b; font-size: 0.875rem; margin-bottom: 1.5rem;">
     Filtering by mood: {{ filter }}
-  </p>
+  </p> -->
   
   <!-- Diary Entries -->
   <div *ngIf="entries.length; else noEntries" class="entries-grid">
     <div *ngFor="let entry of entries; let i = index" class="entry-card" [style.animation-delay]="i * 0.1 + 's'">
       <div class="card-content">
         <h2 class="card-title">{{ entry.title }}</h2>
+        <div class="text-sm text-gray-500 italic mt-2">
+          Posted {{ entry.createdAt | relativeTime }}
+        </div>
         <p class="card-text">{{ entry.content | slice:0:100 }}{{ entry.content.length > 100 ? '...' : '' }}</p>
         
         <!-- Tags Display -->
@@ -67,11 +147,19 @@
         <!-- Mood Display -->
         <div class="card-mood">
           <span [ngSwitch]="entry.mood">
-            <span *ngSwitchCase="'happy'">😊</span>
-            <span *ngSwitchCase="'sad'">😔</span>
-            <span *ngSwitchCase="'angry'">😡</span>
-            <span *ngSwitchCase="'excited'">😃</span>
-            <span *ngSwitchDefault>{{ entry.mood || 'No mood set' }}</span>
+            <span *ngSwitchCase="'happy'">Happy 😊</span>
+<span *ngSwitchCase="'sad'">Sad 😔</span>
+<span *ngSwitchCase="'angry'">Angry 😡</span>
+<span *ngSwitchCase="'excited'">Excited 😃</span>
+<span *ngSwitchCase="'neutral'">Neutral 😐</span>
+<span *ngSwitchCase="'anxious'">Anxious 😰</span>
+<span *ngSwitchCase="'grateful'">Grateful 🙏</span>
+<span *ngSwitchCase="'lonely'">Lonely 😞</span>
+<span *ngSwitchCase="'motivated'">Motivated 💪</span>
+<span *ngSwitchCase="'tired'">Tired 😴</span>
+<span *ngSwitchCase="'confused'">Confused 😕</span>
+<span *ngSwitchDefault>{{ entry.mood || 'No mood set' }}</span>
+
           </span>
         </div>
         
@@ -109,6 +197,9 @@
   <div *ngIf="viewEntry" class="modal-backdrop">
     <div class="modal">
       <h2 class="modal-title">{{ viewEntry.title }}</h2>
+      <div class="text-sm text-gray-500 italic mt-2">
+        Posted {{ viewEntry.createdAt | relativeTime }}
+      </div>
       <p style="margin-bottom: 1.5rem; white-space: pre-wrap; line-height: 1.6;">{{ viewEntry.content }}</p>
       
       <div style="margin-bottom: 1rem;">
@@ -136,13 +227,11 @@
       </button>
     </div>
   </div>
-
-  <!-- Modal for Create/Edit Entry -->
   <div *ngIf="showModal" class="modal-backdrop">
-    <div class="modal">
+    <div class="modal scrollable-modal">
       <h3 class="modal-title">{{ editMode ? 'Edit Entry' : 'Create New Entry' }}</h3>
       
-      <form (ngSubmit)="submitEntry()" #entryForm="ngForm">
+      <form (ngSubmit)="submitEntry()" #entryForm="ngForm" class="modal-form">
         <div class="form-group">
           <label class="form-label">Title *</label>
           <input
@@ -170,7 +259,7 @@
           (click)="analyzeContent()"
           class="btn-analyze"
         >
-          Auto Generate Title & Mood
+        Can’t think of a Title or Mood? Let AI handle it
         </button>
         
         <!-- Tags Section -->
@@ -201,21 +290,30 @@
             Add Tag
           </button>
         </div>
-
+  
         <div class="form-group">
           <label class="form-label">Mood</label>
           <select 
-            [(ngModel)]="newEntry.mood" 
-            name="mood" 
-            class="form-control"
-          >
-            <option value="happy">Happy</option>
-            <option value="sad">Sad</option>
-            <option value="angry">Angry</option>
-            <option value="excited">Excited</option>
-          </select>
-        </div>
+  [(ngModel)]="newEntry.mood" 
+  name="mood" 
+  class="form-control"
+>
+  <option value="" disabled selected>Select a mood</option>
+  <option value="happy">Happy 😊</option>
+  <option value="sad">Sad 😔</option>
+  <option value="angry">Angry 😡</option>
+  <option value="excited">Excited 😃</option>
+  <option value="neutral">Neutral 😐</option>
+  <option value="anxious">Anxious 😰</option>
+  <option value="grateful">Grateful 🙏</option>
+  <option value="lonely">Lonely 😞</option>
+  <option value="motivated">Motivated 💪</option>
+  <option value="tired">Tired 😴</option>
+  <option value="confused">Confused 😕</option>
+</select>
 
+        </div>
+  
         <div class="modal-actions">
           <button 
             type="submit" 
@@ -235,4 +333,8 @@
       </form>
     </div>
   </div>
+  
+</div>
+
+
 </div>

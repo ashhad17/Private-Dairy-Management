@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { DiaryService } from '../diary.service';
+import { DiaryService } from '../../diary/diary.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import {jwtDecode} from 'jwt-decode';
 import { AuthService } from '../../services/auth.service';
-import { RelativeTimePipe } from './relative-time.pipe';
+import { RelativeTimePipe } from '../../diary/home/relative-time.pipe';
 @Component({
   selector: 'app-home',
   imports: [CommonModule, FormsModule,RelativeTimePipe],
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
+  templateUrl: './dashboard-ui.component.html',
+  styleUrls: ['./dashboard-ui.component.scss'],
 })
 export class HomeComponent implements OnInit {
   userName: string = '';
@@ -61,7 +61,16 @@ export class HomeComponent implements OnInit {
   
   selectedMood: string = 'All';
   selectedDate: string = '';
+  tagInput = '';
 
+  addTagFromInput(event: Event): void {
+    event.preventDefault(); // prevent form submit
+    const value = this.tagInput.trim();
+    if (value && !this.newEntry.tags.includes(value)) {
+      this.newEntry.tags.push(value);
+    }
+    this.tagInput = '';
+  }
 onDateChange(event: any): void {
   const selected = new Date(event.target.value);
   this.filterEntriesByDate(selected);

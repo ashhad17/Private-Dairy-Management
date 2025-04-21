@@ -1,18 +1,3 @@
-// const nodemailer = require('nodemailer');
-
-// const transporter = nodemailer.createTransport({
-//   service: 'gmail',
-//   auth: {
-//     user: process.env.MAIL_USER,
-//     pass: process.env.MAIL_PASS
-//   }
-// });
-
-// const sendMail = async (to, subject, html) => {
-//   return transporter.sendMail({ from: process.env.MAIL_USER, to, subject, html });
-// };
-
-// module.exports = { sendMail };
 
 
 const nodemailer = require('nodemailer');
@@ -42,7 +27,7 @@ exports.sendReminderEmail = async (to) => {
     from: '"Daily Diary" <no-reply@diary.com>',
     to,
     subject: 'Your daily diary reminder 📝',
-    html: `<p>Don't forget to write in your diary today!</p><br><a href="https://your-app.com">Open Diary</a>`
+    html: `<p>Don't forget to write in your diary today!</p><br><a href="http://localhost:4200">Open Diary</a>`
   });
 };
 
