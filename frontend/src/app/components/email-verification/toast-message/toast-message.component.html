@@ -1,0 +1,5 @@
+<div *ngIf="visible" class="fixed top-6 right-6 z-50">
+  <div [ngClass]="isError ? 'bg-red-500' : 'bg-green-500'" class="text-white px-6 py-3 rounded-md shadow-lg">
+    {{ message }}
+  </div>
+</div>

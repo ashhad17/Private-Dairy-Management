@@ -10,10 +10,13 @@ import { MatInputModule } from '@angular/material/input';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { ToastMessageComponent } from '../email-verification/toast-message/toast-message.component';
+import { ToastService } from '../email-verification/toast-message/toast.service';
+
 @Component({
   selector: 'app-otp-login',
   standalone: true,
-  imports: [FormsModule,CommonModule,RouterModule],
+  imports: [FormsModule,CommonModule,RouterModule,ToastMessageComponent],
   templateUrl: './otp-login.component.html',
   styleUrls: ['./otp-login.component.scss']
 })
@@ -24,7 +27,7 @@ export class OtpLoginComponent {
   loading = false;
   error = '';
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private auth: AuthService, private router: Router,private toast:ToastService) {}
 
   sendOtp() {
     this.loading = true;
@@ -33,10 +36,12 @@ export class OtpLoginComponent {
       next: () => {
         this.step = 2;
         this.loading = false;
+        this.toast.showSuccess('OTP sent successfully');
       },
       error: (err) => {
         this.error = err.error?.message || 'Failed to send OTP';
         this.loading = false;
+        this.toast.showError(this.error);
       }
     });
   }
@@ -46,12 +51,14 @@ export class OtpLoginComponent {
     this.error = '';
     this.auth.verifyOTP(this.email, this.otp).subscribe({
       next: (res) => {
+        this.toast.showSuccess('OTP verified successfully');
         localStorage.setItem('token', res.token);
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         this.error = err.error?.message || 'Invalid OTP';
         this.loading = false;
+        this.toast.showError(this.error); 
       }
     });
   }

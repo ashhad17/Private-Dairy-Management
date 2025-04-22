@@ -8,7 +8,7 @@
 <nav class="navbar">
   <div class="navbar-brand">
     <span class="logo-icon">📔</span>
-    <h1>MyDiary</h1>
+    <h1>Moodiary</h1>
   </div>
   <div class="navbar-actions">
     <button class="btn btn-outline" (click)="openReminderModal()">
@@ -38,8 +38,8 @@
   </div>
 </section>
 <section class="filters-section">
-  <div class="section-header">
-    <h3>Filter Entries</h3>
+  <div class="section-header" style="display: flex;justify-content: center;align-items: center;">
+    <span class="text-3xl">Filter Entries</span>
   </div>
 
   <!-- Quick date filters -->
@@ -52,7 +52,7 @@
   </div> -->
 
   <!-- Mood filters -->
-  <h4>Filter by Mood</h4>
+  <!-- <h4>Filter by Mood</h4> -->
   <div class="mood-filters">
     <button class="mood-filter" *ngFor="let mood of moods" [class.active]="selectedMood === mood.value" (click)="filterByMood(mood.value)">
       <span class="mood-emoji">{{mood.label}}</span>
@@ -62,22 +62,24 @@
   </div>
 
   <!-- Date filters -->
-  <div class="date-filters">
+  <div class="date-filters flex gap-4 flex-wrap">
     <div class="date-group">
       <label class="date-label" for="start-date">From Date</label>
-      <input type="date" id="start-date" [(ngModel)]="updatedFromDate" (change)="onDateChange($event)" class="date-input">
+      <input type="date" id="start-date" name="startDate" [(ngModel)]="updatedFromDate" class="date-input">
+
     </div>
+  
     <div class="date-group">
-      <label class="date-label" for="start-date">To Date</label>
-      <input type="date" id="start-date" [(ngModel)]="updatedToDate" (change)="onDateChange($event)" class="date-input">
+      <label class="date-label" for="end-date">To Date</label>
+      <input type="date" id="end-date" name="endDate" [(ngModel)]="updatedToDate" class="date-input">
     </div>
-
-    <div class="date-group" style="max-width: 150px; align-self: flex-end;">
-      <button class="btn btn-primary"  (click)="filterByUpdatedDate()">Apply Filter</button>
-      <button class="btn btn-primary" (click)="clearDateFilter()">Clear Date Filter</button>
-
+  
+    <div class="date-group flex flex-col justify-between items-center max-w-[150px] self-end">
+      <button class="btn btn-primary mb-2" (click)="filterByUpdatedDate()">Apply Filter</button>
+      <button class="btn btn-secondary" (click)="clearDateFilter()">Clear Date Filter</button>
     </div>
   </div>
+  
 </section>
 
 
@@ -109,8 +111,8 @@
       </div>
 
       <div class="flex justify-end gap-4 mt-4">
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-          (click)="closeReminderModal()">Save</button>
+        <button type="submit" (click)="closeReminderModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          >Save</button>
         <button type="button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition"
           (click)="closeReminderModal()">Cancel</button>
       </div>
@@ -128,7 +130,7 @@
 <section class="entries-section">
   <div class="entries-header">
     <h3>Your Diary Entries</h3>
-    <div class="entries-count">12 Entries</div>
+    <div class="entries-count">{{ entries.length }} Entries</div>
   </div>
 
   <div class="entries-grid" *ngIf="entries.length; else noEntries">
@@ -229,7 +231,7 @@
       </span>
     </div>
 
-    <button (click)="closeViewModal()" class="btn-cancel">
+    <button (click)="closeViewModal()" class="btn btn-secondary">
       Close
     </button>
   </div>
@@ -327,10 +329,10 @@
   </div>
 </div>
 
+<toast-message></toast-message>
 
 
-
-<script>
+<!-- <script>
   document.addEventListener('DOMContentLoaded', function () {
     const entryCards = document.querySelectorAll('.entry-card');
 
@@ -370,4 +372,4 @@
       this.querySelector('i').style.transform = `rotate(${rotation}deg)`;
     });
   });
-</script>
+</script> -->

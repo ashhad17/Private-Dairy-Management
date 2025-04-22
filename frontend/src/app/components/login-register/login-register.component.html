@@ -3,7 +3,7 @@
       <div class="p-8">
         <div class="text-center mb-6">
           <div class="text-4xl mb-2">📔</div>
-          <h1 class="text-2xl font-bold text-gray-800">MyDiary</h1>
+          <h1 class="text-2xl font-bold text-gray-800">Moodiary</h1>
           <p class="text-sm text-gray-500">Your private thoughts, securely stored</p>
         </div>
   
@@ -38,7 +38,7 @@
   
           <div class="flex items-center justify-between text-sm text-gray-600">
             <a href="/forgot-password" class="text-indigo-600 hover:underline">Forgot password?</a>
-            <a href="#" class="text-indigo-600 hover:underline" (click)="isSignup = true">Create an account</a>
+            <button class="text-indigo-600 hover:underline" (click)="isSignup = true">Create an account</button>
           </div>
   
           <button type="submit" [disabled]="loading"
@@ -86,4 +86,4 @@
       </div>
     </div>
   </div>
-  
+  <toast-message></toast-message>

@@ -1,27 +1,31 @@
+<div class="max-w-sm mx-auto mt-20 p-6 bg-white shadow-lg rounded-xl">
+  <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Email Verification</h2>
 
-   <div class="max-w-sm mx-auto mt-20 p-6 bg-white shadow-lg rounded-xl">
-    <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Email Verification</h2>
-    
-    <form (ngSubmit)="verifyEmail()">
-      <input 
-        type="text" 
-        [value]="token" 
-        placeholder="Verification Token" 
-        readonly 
-        hidden
-        class="w-full p-3 border border-gray-300 rounded-md text-gray-600 bg-gray-100 mb-4" 
-      />
-    
-      <div *ngIf="message" class="text-green-600 mt-4 text-center font-medium">
+  <form (ngSubmit)="verifyEmail()">
+    <!-- Hidden token field -->
+    <input type="text" [value]="token" hidden readonly />
+
+    <!-- Loader (centered) -->
+    <div *ngIf="loading" class="flex justify-center mb-4">
+      <div class="loader ease-linear rounded-full border-4 border-t-4 border-blue-500 h-8 w-8 animate-spin"></div>
+    </div>
+
+    <!-- Feedback message -->
+    <div *ngIf="message || err" class="text-center mb-4">
+      <span *ngIf="message" class="text-green-600 font-medium">
         {{ message }}
-      </div>
-    
-      <button 
-        type="submit" 
-        [disabled]="!token"
-        class="w-full mt-4 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed">
-        Verify Email
-      </button>
-    </form>
-  </div>
-  
+      </span>
+      <span *ngIf="err" class="text-red-600 font-medium">
+        {{ err }}
+      </span>
+    </div>
+
+    <!-- Submit button -->
+    <button
+      type="submit"
+      [disabled]="!token || loading"
+      class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed">
+      {{ loading ? 'Verifying...' : 'Verify Email' }}
+    </button>
+  </form>
+</div>
