@@ -7,11 +7,12 @@ import { RelativeTimePipe } from '../../diary/home/relative-time.pipe';
 import { jwtDecode } from 'jwt-decode';
 import { ToastService } from '../email-verification/toast-message/toast.service';
 import { ToastMessageComponent } from '../email-verification/toast-message/toast-message.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, RelativeTimePipe,ToastMessageComponent],
+  imports: [CommonModule, FormsModule, RelativeTimePipe,ToastMessageComponent,RouterModule],
   templateUrl: './dashboard-ui.component.html',
   styleUrls: ['./dashboard-ui.component.scss'],
 })
@@ -63,6 +64,7 @@ export class HomeComponent implements OnInit {
   errorMessage: string = '';
   reminderEnabled = false;
   reminderTime = '20:00';
+// Example format
 
   constructor(
     private diaryService: DiaryService,
@@ -285,7 +287,36 @@ export class HomeComponent implements OnInit {
       }
     });
   }
-
+  shareOnFacebook() {
+    const content = this.newEntry.content;  // Diary content
+    const mood = this.newEntry.mood;        // Mood      // Date (formatted as needed)
+    
+    const message = encodeURIComponent(`Check out my diary entry! Mood: ${mood}, Content: ${content}`);
+    
+    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${message}`;
+    window.open(shareUrl, '_blank');
+  }
+  
+  shareOnTwitter() {
+    const content = this.viewEntry.content;
+    const mood = this.viewEntry.mood;
+    
+    const tweetText = encodeURIComponent(`Check out my diary entry! Mood: ${mood} \n Content:$(content)`);
+    const shareUrl = `https://twitter.com/intent/tweet?text=${tweetText}&url=${encodeURIComponent(content)}`;
+    window.open(shareUrl, '_blank');
+  }
+  
+  shareOnLinkedIn() {
+    const content = this.newEntry.content;
+    const mood = this.newEntry.mood;
+    
+    const message = encodeURIComponent(`Check out my diary entry! Mood: ${mood}, Content: ${content}`);
+    
+    const shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${message}`;
+    window.open(shareUrl, '_blank');
+  }
+  
+  
   deleteEntry(id: string) {
     if (confirm('Are you sure you want to delete this entry?')) {
       this.isLoading = true;

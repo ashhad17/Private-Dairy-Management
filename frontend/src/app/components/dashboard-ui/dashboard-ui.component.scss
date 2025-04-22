@@ -1097,7 +1097,28 @@
         font-size: 13px;
       }
     }
-
+    .share-btn {
+      background-color: #007bff;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      margin: 5px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .share-btn i {
+      margin-right: 8px;
+      cursor: pointer;
+    }
+    
+    .share-buttons {
+      display: flex;
+      justify-content: space-around;
+    }
+    
     /* Demo content only */
     .dashboard-preview {
       background-color: #ddd;

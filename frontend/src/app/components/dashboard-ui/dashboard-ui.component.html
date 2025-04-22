@@ -121,11 +121,6 @@
 </div>
 
 <!-- Create Entry Button -->
-<div style="text-align: center;">
-  <button (click)="openModal()" class="create-btn">
-    Create New Entry
-  </button>
-</div>
 
 <section class="entries-section">
   <div class="entries-header">
@@ -231,9 +226,17 @@
       </span>
     </div>
 
-    <button (click)="closeViewModal()" class="btn btn-secondary">
-      Close
-    </button>
+    
+    <!-- Share Buttons with Icons -->
+<div class="share-buttons">
+  <button (click)="closeViewModal()" class="btn btn-secondary">
+    Close
+  </button>
+  <button class="share-btn" (click)="shareOnFacebook()"><i class="fab fa-facebook"></i> Share on Facebook</button>
+  <button class="share-btn" (click)="shareOnTwitter()"><i class="fab fa-twitter"></i> Share on Twitter</button>
+  <button class="share-btn" (click)="shareOnLinkedIn()"><i class="fab fa-linkedin"></i> Share on LinkedIn</button>
+</div>
+
   </div>
 </div>
 
