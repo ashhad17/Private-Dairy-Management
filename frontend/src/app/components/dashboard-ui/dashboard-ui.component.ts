@@ -17,7 +17,7 @@ import { fill } from '@cloudinary/url-gen/actions/resize';
   standalone: true,
   imports: [CommonModule, FormsModule, RelativeTimePipe,ToastMessageComponent,RouterModule],
   templateUrl: './dashboard-ui.component.html',
-  providers: [Cloudinary],
+  providers: [],
   styleUrls: ['./dashboard-ui.component.scss'],
 })
 export class HomeComponent implements OnInit {
@@ -31,7 +31,9 @@ export class HomeComponent implements OnInit {
   updatedToDate: string = '';
   tagInput = '';
   tagInputValue: string = '';
-  cloudinaryUrl: string ='';
+  cloudinaryUrl: string = '';
+  cloudinary: Cloudinary; 
+  // cloudinaryUrl: string ='';
 
   newEntry: any = {
     title: '',
@@ -75,15 +77,20 @@ export class HomeComponent implements OnInit {
     private diaryService: DiaryService,
     public auth: AuthService,
     private toast: ToastService,
-    private cloudinary: Cloudinary
+    // private cloudinary: Cloudinary
     
   ) {
     
+      // this.cloudinary = new Cloudinary({
+      //   cloud: {
+      //     cloudName: 'dquspyuhw', // Get from Cloudinary dashboard
+      //     apiKey: '358284984657374',       // Get from Cloudinary dashboard
+      //     apiSecret: '3EhKjdCv_SUKnUBkiqTY55qYFoM', // Optional (needed for server-side uploads)
+      //   },
+      // });
       this.cloudinary = new Cloudinary({
         cloud: {
-          cloudName: 'dquspyuhw', // Get from Cloudinary dashboard
-          apiKey: '358284984657374',       // Get from Cloudinary dashboard
-          apiSecret: '3EhKjdCv_SUKnUBkiqTY55qYFoM', // Optional (needed for server-side uploads)
+          cloudName: 'dquspyuhw',
         },
       });
     
