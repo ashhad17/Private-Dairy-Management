@@ -234,6 +234,20 @@
     Close
   </button>
   <button class="btn btn-primary" (click)="captureDiary()">Freeze This Feeling</button>
+  <div class="share-buttons">
+    <button (click)="shareOnFacebook(cloudinaryUrl)">
+      <i class="fab fa-facebook"></i> Facebook
+    </button>
+    <button (click)="shareOnTwitter(cloudinaryUrl)">
+      <i class="fab fa-twitter"></i> Twitter
+    </button>
+    <button (click)="shareOnWhatsApp(cloudinaryUrl)">
+      <i class="fab fa-whatsapp"></i> WhatsApp
+    </button>
+    <button (click)="downloadForInstagram(cloudinaryUrl)">
+      <i class="fab fa-instagram"></i> Save for Instagram
+    </button>
+  </div>
   <!-- <button class="share-btn" (click)="shareOnFacebook()"><i class="fab fa-facebook"></i> Share on Facebook</button>
   <button class="share-btn" (click)="shareOnTwitter()"><i class="fab fa-twitter"></i> Share on Twitter</button>
   <button class="share-btn" (click)="shareOnLinkedIn()"><i class="fab fa-linkedin"></i> Share on LinkedIn</button> -->

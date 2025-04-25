@@ -9,11 +9,15 @@ import { ToastService } from '../email-verification/toast-message/toast.service'
 import { ToastMessageComponent } from '../email-verification/toast-message/toast-message.component';
 import { RouterModule } from '@angular/router';
 import html2canvas from 'html2canvas-pro';
+import { Cloudinary, CloudinaryImage } from '@cloudinary/url-gen';
+import { fill } from '@cloudinary/url-gen/actions/resize';
+
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule, FormsModule, RelativeTimePipe,ToastMessageComponent,RouterModule],
   templateUrl: './dashboard-ui.component.html',
+  providers: [Cloudinary],
   styleUrls: ['./dashboard-ui.component.scss'],
 })
 export class HomeComponent implements OnInit {
@@ -27,6 +31,7 @@ export class HomeComponent implements OnInit {
   updatedToDate: string = '';
   tagInput = '';
   tagInputValue: string = '';
+  cloudinaryUrl: string ='';
 
   newEntry: any = {
     title: '',
@@ -69,8 +74,21 @@ export class HomeComponent implements OnInit {
   constructor(
     private diaryService: DiaryService,
     public auth: AuthService,
-    private toast: ToastService
-  ) {}
+    private toast: ToastService,
+    private cloudinary: Cloudinary
+    
+  ) {
+    
+      this.cloudinary = new Cloudinary({
+        cloud: {
+          cloudName: 'dquspyuhw', // Get from Cloudinary dashboard
+          apiKey: '358284984657374',       // Get from Cloudinary dashboard
+          apiSecret: '3EhKjdCv_SUKnUBkiqTY55qYFoM', // Optional (needed for server-side uploads)
+        },
+      });
+    
+  
+  }
 
   ngOnInit(): void {
     // this.entries = this.loadEntries(); // Mock or real service call
@@ -82,6 +100,7 @@ export class HomeComponent implements OnInit {
       this.userName = decoded.name;
     }
     this.loadEntries();
+    
   
   }
 
@@ -287,48 +306,111 @@ export class HomeComponent implements OnInit {
       }
     });
   }
-  shareOnFacebook() {
-    const content = this.newEntry.content;  // Diary content
-    const mood = this.newEntry.mood;        // Mood      // Date (formatted as needed)
+  // shareOnFacebook() {
+  //   const content = this.newEntry.content;  // Diary content
+  //   const mood = this.newEntry.mood;        // Mood      // Date (formatted as needed)
     
-    const message = encodeURIComponent(`Check out my diary entry! Mood: ${mood}, Content: ${content}`);
+  //   const message = encodeURIComponent(`Check out my diary entry! Mood: ${mood}, Content: ${content}`);
     
-    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${message}`;
-    window.open(shareUrl, '_blank');
+  //   const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${message}`;
+  //   window.open(shareUrl, '_blank');
+  // }
+//   captureDiary(): void {
+//     const element = document.getElementById('diary-content'); // Your HTML element ID
+//     if (element) {
+//         html2canvas(element).then((canvas) => {
+//             const imageData = canvas.toDataURL('image/jpeg'); // Convert to JPG format
+//             this.downloadImage(imageData, 'diary-image.jpg');
+//         });
+//     }
+// }
+async captureDiary(): Promise<string | undefined> {
+  const element = document.getElementById('diary-content');
+  if (!element) {
+    console.warn('Diary content element not found.');
+    return undefined; // Explicitly return undefined
   }
-  captureDiary(): void {
-    const element = document.getElementById('diary-content'); // Your HTML element ID
-    if (element) {
-        html2canvas(element).then((canvas) => {
-            const imageData = canvas.toDataURL('image/jpeg'); // Convert to JPG format
-            this.downloadImage(imageData, 'diary-image.jpg');
-        });
-    }
+
+  try {
+    const canvas = await html2canvas(element);
+    const imageData = canvas.toDataURL('image/jpeg');
+    this.downloadImage(imageData, 'diary-image.jpg');
+
+    // Upload to Cloudinary
+    this.cloudinaryUrl = await this.uploadToCloudinary(imageData);
+
+    console.log('Cloudinary URL:', this.cloudinaryUrl);
+    return this.cloudinaryUrl; // Return the URL
+  } catch (error) {
+    console.error('Error capturing or uploading:', error);
+    return undefined; // Explicitly return undefined in case of error
+  }
 }
 
+async uploadToCloudinary(imageData: string): Promise<string> {
+  const formData = new FormData();
+  formData.append('file', imageData);
+  formData.append('upload_preset', 'diary_images'); // Create one in Cloudinary settings
+
+  const response = await fetch(
+    `https://api.cloudinary.com/v1_1/dquspyuhw/image/upload`,
+    {
+      method: 'POST',
+      body: formData,
+    }
+  );
+
+  const data = await response.json();
+  return data.secure_url; // Returns the public URL of the uploaded image
+}
 downloadImage(dataUrl: string, fileName: string): void {
     const link = document.createElement('a');
     link.href = dataUrl;
     link.download = fileName;
     link.click();
 }
-  shareOnTwitter() {
-    const content = this.viewEntry.content;
-    const mood = this.viewEntry.mood;
+  // shareOnTwitter() {
+  //   const content = this.viewEntry.content;
+  //   const mood = this.viewEntry.mood;
     
-    const tweetText = encodeURIComponent(`Check out my diary entry! Mood: ${mood} \n Content:$(content)`);
-    const shareUrl = `https://twitter.com/intent/tweet?text=${tweetText}&url=${encodeURIComponent(content)}`;
-    window.open(shareUrl, '_blank');
-  }
+  //   const tweetText = encodeURIComponent(`Check out my diary entry! Mood: ${mood} \n Content:$(content)`);
+  //   const shareUrl = `https://twitter.com/intent/tweet?text=${tweetText}&url=${encodeURIComponent(content)}`;
+  //   window.open(shareUrl, '_blank');
+  // }
   
-  shareOnLinkedIn() {
-    const content = this.newEntry.content;
-    const mood = this.newEntry.mood;
+  // shareOnLinkedIn() {
+  //   const content = this.newEntry.content;
+  //   const mood = this.newEntry.mood;
     
-    const message = encodeURIComponent(`Check out my diary entry! Mood: ${mood}, Content: ${content}`);
+  //   const message = encodeURIComponent(`Check out my diary entry! Mood: ${mood}, Content: ${content}`);
     
-    const shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${message}`;
-    window.open(shareUrl, '_blank');
+  //   const shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${message}`;
+  //   window.open(shareUrl, '_blank');
+  // }
+
+  shareOnWhatsApp(imageUrl: string) {
+    const text = encodeURIComponent("Check out my diary entry!");
+    const url = `https://wa.me/?text=${text}%20${imageUrl}`;
+    window.open(url, '_blank');
+  }
+  shareOnFacebook(imageUrl: string) {
+    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(imageUrl)}`;
+    window.open(url, '_blank');
+  }
+  shareOnTwitter(imageUrl: string, text: string = "Check out my diary entry!") {
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(imageUrl)}`;
+    window.open(url, '_blank');
+  }
+  shareOnLinkedIn(imageUrl: string, title: string = "My Diary Entry", summary: string = "Check out my latest thoughts!") {
+    const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(imageUrl)}`;
+    window.open(url, '_blank');
+  }
+  downloadForInstagram(imageUrl: string) {
+    const link = document.createElement('a');
+    link.href = imageUrl;
+    link.download = 'diary-entry.jpg';
+    link.click();
+    this.toast.showSuccess('Downloaded! Open Instagram to post it.');
   }
   
   
