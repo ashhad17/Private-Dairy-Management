@@ -188,7 +188,8 @@
 
 <!-- View Entry Modal -->
 <div *ngIf="viewEntry" class="modal-overlay">
-  <div class="modal-content">
+  <div class="modal-content" >
+    <div class="p-6" id="diary-content">
     <div style="display: flex;justify-content: space-between; align-items: center;">
 
       <h2 class="modal-title">{{ viewEntry.title }}</h2>
@@ -226,15 +227,16 @@
       </span>
     </div>
 
-    
+  </div>
     <!-- Share Buttons with Icons -->
 <div class="share-buttons">
   <button (click)="closeViewModal()" class="btn btn-secondary">
     Close
   </button>
-  <button class="share-btn" (click)="shareOnFacebook()"><i class="fab fa-facebook"></i> Share on Facebook</button>
+  <button class="btn btn-primary" (click)="captureDiary()">Freeze This Feeling</button>
+  <!-- <button class="share-btn" (click)="shareOnFacebook()"><i class="fab fa-facebook"></i> Share on Facebook</button>
   <button class="share-btn" (click)="shareOnTwitter()"><i class="fab fa-twitter"></i> Share on Twitter</button>
-  <button class="share-btn" (click)="shareOnLinkedIn()"><i class="fab fa-linkedin"></i> Share on LinkedIn</button>
+  <button class="share-btn" (click)="shareOnLinkedIn()"><i class="fab fa-linkedin"></i> Share on LinkedIn</button> -->
 </div>
 
   </div>

@@ -8,7 +8,7 @@ import { jwtDecode } from 'jwt-decode';
 import { ToastService } from '../email-verification/toast-message/toast.service';
 import { ToastMessageComponent } from '../email-verification/toast-message/toast-message.component';
 import { RouterModule } from '@angular/router';
-
+import html2canvas from 'html2canvas-pro';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -296,7 +296,22 @@ export class HomeComponent implements OnInit {
     const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${message}`;
     window.open(shareUrl, '_blank');
   }
-  
+  captureDiary(): void {
+    const element = document.getElementById('diary-content'); // Your HTML element ID
+    if (element) {
+        html2canvas(element).then((canvas) => {
+            const imageData = canvas.toDataURL('image/jpeg'); // Convert to JPG format
+            this.downloadImage(imageData, 'diary-image.jpg');
+        });
+    }
+}
+
+downloadImage(dataUrl: string, fileName: string): void {
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = fileName;
+    link.click();
+}
   shareOnTwitter() {
     const content = this.viewEntry.content;
     const mood = this.viewEntry.mood;
