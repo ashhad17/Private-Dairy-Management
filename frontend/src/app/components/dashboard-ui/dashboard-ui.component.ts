@@ -347,6 +347,7 @@ async captureDiary(): Promise<string | undefined> {
     this.cloudinaryUrl = await this.uploadToCloudinary(imageData);
 
     console.log('Cloudinary URL:', this.cloudinaryUrl);
+    this.toast.showSuccess('Diary Page Downloaded!');
     return this.cloudinaryUrl; // Return the URL
   } catch (error) {
     console.error('Error capturing or uploading:', error);

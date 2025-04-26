@@ -76,7 +76,7 @@
   
     <div class="date-group flex flex-col justify-between items-center max-w-[150px] self-end">
       <button class="btn btn-primary mb-2" (click)="filterByUpdatedDate()">Apply Filter</button>
-      <button class="btn btn-secondary" (click)="clearDateFilter()">Clear Date Filter</button>
+      <button class="btn btn-outline" (click)="clearDateFilter()">Clear Date Filter</button>
     </div>
   </div>
   
@@ -230,23 +230,23 @@
   </div>
     <!-- Share Buttons with Icons -->
 <div class="share-buttons">
-  <button (click)="closeViewModal()" class="btn btn-secondary">
+  <button (click)="closeViewModal()" class="btn btn-outline">
     Close
   </button>
-  <button class="btn btn-primary" (click)="captureDiary()">Freeze This Feeling</button>
+  <button class="btn btn-outline" (click)="captureDiary()">Freeze This Feeling</button>
  
-    <button class="btn btn-secondary" (click)="shareOnFacebook(cloudinaryUrl)">
+    <button class="btn btn-outline" (click)="shareOnFacebook(cloudinaryUrl)">
       <i class="fab fa-facebook"></i> Facebook
     </button>
-    <button  class="btn btn-secondary"  (click)="shareOnTwitter(cloudinaryUrl)">
+    <button  class="btn btn-outline"  (click)="shareOnTwitter(cloudinaryUrl)">
       <i class="fab fa-twitter"></i> Twitter
     </button>
-    <button  class="btn btn-secondary"  (click)="shareOnWhatsApp(cloudinaryUrl)">
+    <button  class="btn btn-outline"  (click)="shareOnWhatsApp(cloudinaryUrl)">
       <i class="fab fa-whatsapp"></i> WhatsApp
     </button>
-    <button  class="btn btn-secondary"  (click)="downloadForInstagram(cloudinaryUrl)">
+    <!-- <button  class="btn btn-primary"  (click)="downloadForInstagram(cloudinaryUrl)">
       <i class="fab fa-instagram"></i> Save for Instagram
-    </button>
+    </button> -->
   
   <!-- <button class="share-btn" (click)="shareOnFacebook()"><i class="fab fa-facebook"></i> Share on Facebook</button>
   <button class="share-btn" (click)="shareOnTwitter()"><i class="fab fa-twitter"></i> Share on Twitter</button>
