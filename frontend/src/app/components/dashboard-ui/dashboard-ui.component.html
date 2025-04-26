@@ -1,14 +1,30 @@
 <!-- Loading Indicator -->
+<!-- Replace your current loading component with this -->
 <div *ngIf="isLoading" class="loading-backdrop">
   <div class="loading-container">
-    <div class="loading-spinner"></div>
-    <span class="loading-text">Loading...</span>
+    <div class="book">
+      <div class="inner">
+        <div class="left"></div>
+        <div class="middle"></div>
+        <div class="right"></div>
+      </div>
+      <ul>
+        <li *ngFor="let page of [].constructor(18); let i = index"></li>
+      </ul>
+    </div>
+    <span class="loading-text">Hold on...</span>
   </div>
 </div>
 <nav class="navbar">
   <div class="navbar-brand">
-    <span class="logo-icon">📔</span>
-    <h1>Moodiary</h1>
+    <span class="logo-icon h-12 flex items-center">
+      <img 
+        src="https://res.cloudinary.com/dquspyuhw/image/upload/v1745646445/moodiary_logo-removebg-preview_ohdlxy.png" 
+        alt="Moodiary Logo" 
+        class="h-full object-contain"
+      />
+    </span>
+        
   </div>
   <div class="navbar-actions">
     <button class="btn btn-outline" (click)="openReminderModal()">
@@ -258,12 +274,28 @@
 
 <!-- New model For creating -->
 <div *ngIf="showModal" class="modal-overlay">
-  <div *ngIf="isLoading" class="loading-backdrop">
+  <!-- <div *ngIf="isLoading" class="loading-backdrop">
     <div class="loading-container">
       <div class="loading-spinner"></div>
       <span class="loading-text">Loading...</span>
     </div>
+  </div> -->
+  <!-- Replace your current loading component with this -->
+<div *ngIf="isLoading" class="loading-backdrop">
+  <div class="loading-container">
+    <div class="book">
+      <div class="inner">
+        <div class="left"></div>
+        <div class="middle"></div>
+        <div class="right"></div>
+      </div>
+      <ul>
+        <li *ngFor="let page of [].constructor(18); let i = index"></li>
+      </ul>
+    </div>
+    <span class="loading-text">Hold on!</span>
   </div>
+</div>
 
   <div class="modal-content">
     <div class="modal-header">
